@@ -7,9 +7,6 @@ import * as yup from "yup";
 import { MenuItems } from "../data/eventStore";
 import "react-datepicker/dist/react-datepicker.css";
 
-import { DayPicker } from "react-day-picker";
-import "react-day-picker/dist/style.css";
-
 const EventEntryForm = () => {
   const [NewEventStore, setNewEventStore] = useState({
     name: "",
@@ -60,11 +57,7 @@ const EventEntryForm = () => {
     }
     console.log(NewEventStore);
   };
-  // const [showPicker, setShowPicker] = useState(false);
 
-  // const handleClick = () => {
-  //   setShowPicker(!showPicker);
-  // };
   return (
     <div className="flex flex-col items-center justify-center gap-9 font-mono">
       <h1 className="my-4 text-2xl hover:font-bold">
@@ -105,6 +98,7 @@ const EventEntryForm = () => {
                 </div>
                 <div>
                   <DatePicker
+                    className="input input-bordered w-full max-w-xs"
                     locale={locale}
                     dateFormat="dd-MM-yyyy"
                     placeholderText="Select Date 🗓️"
@@ -113,22 +107,7 @@ const EventEntryForm = () => {
                       setNewEventStore({ ...NewEventStore, date: value })
                     }
                   />
-                  {/* <input
-                    type="text"
-                    onFocus={handleClick}
-                    onBlur={handleClick}
-                    placeholder="Select a date"
-                  />
-                  {showPicker && (
-                    <DayPicker
-                      mode="single"
-                      selected={NewEventStore.date}
-                      onSelect={(value) =>
-                        setNewEventStore({ ...NewEventStore, date: value })
-                      }
-                      //   footer={footer}
-                    />
-                  )} */}
+
                   {errors.date && (
                     <span className="text-sm text-red-600">
                       {errors.date ? "Date is required." : ""}
@@ -144,6 +123,7 @@ const EventEntryForm = () => {
               </div>
               <div>
                 <input
+                  className="input input-bordered w-full max-w-xs"
                   id="place"
                   type="text"
                   value={NewEventStore.place}
@@ -187,6 +167,7 @@ const EventEntryForm = () => {
               </div>
               <div>
                 <input
+                  className="input input-bordered w-full max-w-xs"
                   id="host"
                   type="text"
                   value={NewEventStore.host}
@@ -204,6 +185,7 @@ const EventEntryForm = () => {
                 </div>
                 <div>
                   <input
+                    className="input input-bordered w-full max-w-xs"
                     id="phone"
                     type="text"
                     value={NewEventStore.phone}
@@ -223,6 +205,7 @@ const EventEntryForm = () => {
                 </div>
                 <div>
                   <input
+                    className="input input-bordered w-full max-w-xs"
                     id="count"
                     type="text"
                     value={NewEventStore.count}
@@ -245,6 +228,7 @@ const EventEntryForm = () => {
                 </div>
                 <div>
                   <input
+                    className="input input-bordered w-full max-w-xs"
                     id="totalExpense"
                     type="text"
                     value={NewEventStore.totalExpense}
@@ -269,6 +253,7 @@ const EventEntryForm = () => {
                 </div>
                 <div>
                   <input
+                    className="input input-bordered w-full max-w-xs"
                     id="receivedAmount"
                     type="text"
                     value={NewEventStore.receivedAmount}
