@@ -27,8 +27,8 @@ const EventEntryForm = () => {
   const locale = registerLocale("enIN", enIN);
 
   const menuItemsOptions = MenuItems.map((item) => ({
-    value: { item },
-    label: { item },
+    value: item,
+    label: item,
   }));
 
   const schema = yup.object().shape({
@@ -60,7 +60,11 @@ const EventEntryForm = () => {
     }
     console.log(NewEventStore);
   };
+  // const [showPicker, setShowPicker] = useState(false);
 
+  // const handleClick = () => {
+  //   setShowPicker(!showPicker);
+  // };
   return (
     <div className="flex flex-col items-center justify-center gap-9 font-mono">
       <h1 className="my-4 text-2xl hover:font-bold">
@@ -109,14 +113,22 @@ const EventEntryForm = () => {
                       setNewEventStore({ ...NewEventStore, date: value })
                     }
                   />
-                  <DayPicker
-                    mode="single"
-                    selected={NewEventStore.date}
-                    onSelect={(value) =>
-                      setNewEventStore({ ...NewEventStore, date: value })
-                    }
-                    //   footer={footer}
+                  {/* <input
+                    type="text"
+                    onFocus={handleClick}
+                    onBlur={handleClick}
+                    placeholder="Select a date"
                   />
+                  {showPicker && (
+                    <DayPicker
+                      mode="single"
+                      selected={NewEventStore.date}
+                      onSelect={(value) =>
+                        setNewEventStore({ ...NewEventStore, date: value })
+                      }
+                      //   footer={footer}
+                    />
+                  )} */}
                   {errors.date && (
                     <span className="text-sm text-red-600">
                       {errors.date ? "Date is required." : ""}
