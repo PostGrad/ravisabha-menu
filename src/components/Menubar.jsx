@@ -1,15 +1,21 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function Menubar() {
   return (
     <div className="navbar bg-white py-4 shadow-md w-screen">
       <div className="flex-1">
-        <a className="btn btn-ghost normal-case text-xl">BUPA Kitchen King</a>
+        <Link to="/" className="btn btn-ghost normal-case text-xl">
+          BUPA Kitchen King
+        </Link>
       </div>
       <div className="flex-none">
         <ul className="menu menu-horizontal px-1">
           <li>
-            <a>List of Events</a>
+            <Link to="/">List of Events</Link>
+          </li>{" "}
+          <li>
+            <Link to="/evententryform">Create New Event</Link>
           </li>
           <li tabIndex={0}>
             <a>
@@ -34,7 +40,7 @@ function Menubar() {
             </ul>
           </li>
           <li>
-            <a>LogIn</a>
+            <a>Log Out</a>
           </li>
         </ul>
       </div>

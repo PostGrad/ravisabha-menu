@@ -1,8 +1,17 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+
 import { eventListData } from "../data/eventlistData";
+import { Button } from "react-daisyui";
 
 function EventList() {
-  const events = eventListData;
+  const navigate = useNavigate();
+
+  const events = structuredClone(eventListData);
+  const handleEditClick = (eventId) => {
+    console.log("Edit clicked", eventId, events);
+    navigate("/evententryform", { state: events[eventId - 1] });
+  };
   return (
     <div className="overflow-x-auto w-full">
       <table className="table w-full">
@@ -23,12 +32,14 @@ function EventList() {
             <th>Count</th>
             <th>Total Expense</th>
             <th>Received Amount</th>
+            <th></th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
           {/* row 1 */}
           {events.map((event) => (
-            <tr key={event.id} onClick={() => console.log(event.id)}>
+            <tr key={event.id} onClick={() => handleEditClick(event.id)}>
               <th>
                 <label>
                   <input type="checkbox" className="checkbox" />
@@ -63,9 +74,12 @@ function EventList() {
               <td>{event.totalExpense}</td>
               <td>{event.receivedAmount}</td>
 
-              {/* <th>
-                <button className="btn btn-ghost btn-xs">details</button>
-              </th> */}
+              <th>
+                <Button onClick={handleEditClick}>Edit</Button>
+              </th>
+              <th>
+                <Button>More Details</Button>
+              </th>
             </tr>
           ))}
         </tbody>
@@ -82,6 +96,8 @@ function EventList() {
             <th>Count</th>
             <th>Total Expense</th>
             <th>Received Amount</th>
+            <th></th>
+            <th></th>
           </tr>
         </tfoot>
       </table>

@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import { registerLocale } from "react-datepicker";
 import { enIN } from "date-fns/locale";
+import { parseISO } from "date-fns";
 import Select from "react-select";
+import ConfirmDialog from "./Confirm";
 import * as yup from "yup";
 import { MenuItems } from "../data/eventStore";
 import "react-datepicker/dist/react-datepicker.css";
@@ -19,8 +22,11 @@ const EventEntryForm = () => {
     totalExpense: "",
     receivedAmount: "",
   });
-  const [errors, setErrors] = useState({});
+  const { state } = useLocation();
 
+  const [errors, setErrors] = useState({});
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const navigate = useNavigate();
   const locale = registerLocale("enIN", enIN);
 
   const menuItemsOptions = MenuItems.map((item) => ({
@@ -40,7 +46,37 @@ const EventEntryForm = () => {
       .number()
       .positive("Received amount must be a positive number."),
   });
-
+  useEffect(() => {
+    if (!!state) {
+      let tempStore = {
+        name: state.eventName,
+        date: parseISO(state.date),
+        place: state.place,
+        menuItems: state.menuItems.map((item) => ({
+          value: item,
+          label: item,
+        })),
+        host: state.hostName,
+        phone: state.phoneNumber,
+        count: state.bhojanCount,
+        totalExpense: state.totalExpense,
+        receivedAmount: state.receivedAmount,
+      };
+      setNewEventStore(tempStore);
+    } else {
+      setNewEventStore({
+        name: "",
+        date: new Date(),
+        place: "",
+        menuItems: [],
+        host: "",
+        phone: "",
+        count: "",
+        totalExpense: "",
+        receivedAmount: "",
+      });
+    }
+  }, [state]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -48,6 +84,7 @@ const EventEntryForm = () => {
       await schema.validate(NewEventStore, { abortEarly: false });
       console.log("after validate call");
       setErrors({});
+      navigate("/");
     } catch (err) {
       const newErrors = err.inner.reduce((acc, err) => {
         console.log(err);
@@ -57,12 +94,14 @@ const EventEntryForm = () => {
     }
     console.log(NewEventStore);
   };
+  const handleDelete = (e) => {
+    e.preventDefault();
+    console.log("Delete clicked");
+  };
 
   return (
     <div className="flex flex-col items-center justify-center gap-9 font-mono">
-      <h1 className="my-4 text-2xl hover:font-bold">
-        Satsang Event Creation Form
-      </h1>
+      <h1 className="my-4 text-2xl hover:font-bold">New Event Creation Form</h1>
       <div className="grid grid-cols-10 w-full">
         <div className="" />
         <div className="col-span-8">
@@ -272,9 +311,32 @@ const EventEntryForm = () => {
                 )}
               </div>
             </div>
-            <button color="purpleToBlue" onClick={handleSubmit}>
-              Submit
-            </button>
+            <div className="grid gap-6 mb-6 md:grid-cols-2">
+              <div>
+                <button className="btn btn-primary" onClick={handleSubmit}>
+                  Save
+                </button>
+              </div>
+              <div>
+                <button
+                  className="btn btn-error"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setConfirmOpen(true);
+                  }}
+                >
+                  Delete
+                </button>
+                <ConfirmDialog
+                  title="Delete Event?"
+                  open={confirmOpen}
+                  onClose={() => setConfirmOpen(false)}
+                  onConfirm={(e) => handleDelete(e)}
+                >
+                  Are you sure you want to delete this event?
+                </ConfirmDialog>
+              </div>
+            </div>
           </form>
         </div>
       </div>

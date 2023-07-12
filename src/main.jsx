@@ -7,7 +7,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <div className="min-h-screen bg-[#e5e7eb]">
       <App />
-      <h1>Hi</h1>
     </div>
   </React.StrictMode>
 );

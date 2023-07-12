@@ -7,11 +7,10 @@ function App() {
   return (
     <Router>
       <div className="container">
-        {/* <Menubar />
-        <EventList /> */}
+        <Menubar />
       </div>
       <Routes>
-        {/* <Route exact path="/" element={<HomePage />} /> */}
+        <Route exact path="/" element={<EventList />} />
         {/* {user.name && <Route exact path="/ppd" element={<PPDPage />} />}
         {user.name && (
           <Route exact path="/pregnancy" element={<PregnancyPage />} />
