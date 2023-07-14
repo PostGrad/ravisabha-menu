@@ -267,23 +267,24 @@ const EventEntryForm = () => {
                 </div>
                 <div>
                   <input
+                    disabled
                     className="input input-bordered w-full max-w-xs"
                     id="totalExpense"
                     type="text"
                     value={NewEventStore.totalExpense}
-                    onChange={(e) =>
-                      setNewEventStore({
-                        ...NewEventStore,
-                        totalExpense: e.target.value,
-                      })
-                    }
+                    // onChange={(e) =>
+                    //   setNewEventStore({
+                    //     ...NewEventStore,
+                    //     totalExpense: e.target.value,
+                    //   })
+                    // }
                   />
                 </div>
-                {errors.totalExpense && (
+                {/* {errors.totalExpense && (
                   <span className="text-sm text-red-600">
                     {errors.totalExpense}
                   </span>
-                )}
+                )} */}
               </div>
               <div>
                 <div>

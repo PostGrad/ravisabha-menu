@@ -32,7 +32,7 @@ function EventList() {
             <th>Count</th>
             <th>Total Expense</th>
             <th>Received Amount</th>
-            <th></th>
+            {/* <th></th> */}
             <th></th>
           </tr>
         </thead>
@@ -74,9 +74,9 @@ function EventList() {
               <td>{event.totalExpense}</td>
               <td>{event.receivedAmount}</td>
 
-              <th>
+              {/* <th>
                 <Button onClick={handleEditClick}>Edit</Button>
-              </th>
+              </th> */}
               <th>
                 <Button>More Details</Button>
               </th>
@@ -96,7 +96,7 @@ function EventList() {
             <th>Count</th>
             <th>Total Expense</th>
             <th>Received Amount</th>
-            <th></th>
+            {/* <th></th> */}
             <th></th>
           </tr>
         </tfoot>
