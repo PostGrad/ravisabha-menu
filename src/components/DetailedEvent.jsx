@@ -108,25 +108,14 @@ const DetailedEvent = () => {
   };
   const [rowsData, setRowsData] = useState([]);
 
-  const addTableRows = () => {
-    const rowsInput = {
-      fullName: "",
-      emailAddress: "",
-      salary: "",
-    };
-    setRowsData([...rowsData, rowsInput]);
-  };
   const deleteTableRows = (index) => {
     const rows = [...rowsData];
     rows.splice(index, 1);
     setRowsData(rows);
   };
 
-  const handleChange = (index, evnt) => {
-    const { name, value } = evnt.target;
-    const rowsInput = [...rowsData];
-    rowsInput[index][name] = value;
-    setRowsData(rowsInput);
+  const handleChange = (rowObj) => {
+    setRowsData([...rowsData, rowObj]);
   };
 
   return (
@@ -396,33 +385,31 @@ const DetailedEvent = () => {
               </div>
               <div className="collapse-content">
                 <div>
-                  <ItemRow optionsArray={Vegetables} />
+                  <ItemRow
+                    optionsArray={Vegetables}
+                    handleChange={handleChange}
+                    placeholder="Vegetables"
+                  />
                 </div>
                 {rowsData.length > 0 && (
-                  <div className="container">
+                  <div className="flex justify-center ">
                     <div className="row">
-                      <div className="col-sm-8">
+                      <div className="col-sm-8 ">
                         <table className="table">
                           <thead>
                             <tr>
-                              <th>Full Name</th>
-                              <th>Email Address</th>
-                              <th>Salary</th>
-                              <th>
-                                <button
-                                  className="btn btn-outline-success"
-                                  onClick={addTableRows}
-                                >
-                                  +
-                                </button>
-                              </th>
+                              <th>#</th>
+                              <th>Vegetable</th>
+                              <th>Quantity</th>
+                              <th>Unit</th>
+                              <th>Price</th>
+                              <th></th>
                             </tr>
                           </thead>
                           <tbody>
                             <TableRow
                               rowsData={rowsData}
                               deleteTableRows={deleteTableRows}
-                              handleChange={handleChange}
                             />
                           </tbody>
                         </table>

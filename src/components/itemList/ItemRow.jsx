@@ -4,16 +4,20 @@ import * as yup from "yup";
 
 import { Units } from "../../data/Units";
 
-function ItemRow({ optionsArray }) {
+function ItemRow({ optionsArray, handleChange, placeholder }) {
   const [store, setStore] = useState({
     name: "",
     quantity: "",
-    unit: [],
+    unit: { label: "kg", value: "kg" },
     price: "",
   });
   const [errors, setErrors] = useState({});
+
   const schema = yup.object().shape({
-    name: yup.string().required("Menu items are required."),
+    name: yup.mixed().test("is-filled", "Required.", (value) => !!value),
+    quantity: yup.string().required("Required."),
+    unit: yup.mixed().test("is-filled", "Required.", (value) => !!value),
+    price: yup.string().required("Required."),
   });
   const options = optionsArray.map((item) => ({
     value: item,
@@ -23,22 +27,43 @@ function ItemRow({ optionsArray }) {
     value: item,
     label: item,
   }));
-
+  const handleAdd = async (e) => {
+    e.preventDefault();
+    try {
+      console.log("inside try");
+      await schema.validate(store, { abortEarly: false });
+      setErrors({});
+      console.log("after validate call");
+      handleChange(store);
+      setStore({
+        name: "",
+        quantity: "",
+        unit: { label: "kg", value: "kg" },
+        price: "",
+      });
+    } catch (err) {
+      const newErrors = err.inner.reduce((acc, err) => {
+        console.log(err);
+        return { ...acc, [err.path]: err.message };
+      }, {});
+      setErrors(newErrors);
+    }
+  };
   return (
     <>
       <div className="flex flex-row gap-4 items-center flex-wrap md:flex-nowrap">
-        <div className="basis-1/2">
+        <div className="basis-1/3">
           <Select
             menuPosition="fixed"
             id="name"
             options={options}
-            placeholder="Vegetables"
+            placeholder={placeholder}
             value={store.name}
             onChange={(value) => setStore({ ...store, name: value })}
             required={true}
           />
-          {errors.menuItems && (
-            <span className="text-sm text-red-600">{errors.menuItems}</span>
+          {errors.name && (
+            <span className="text-sm text-red-600">{errors.name}</span>
           )}
         </div>
         <div className="basis-1/10">
@@ -54,19 +79,27 @@ function ItemRow({ optionsArray }) {
                 quantity: e.target.value,
               })
             }
-          />
+          />{" "}
+          {errors.quantity && (
+            <span className="text-sm text-red-600">{errors.quantity}</span>
+          )}
         </div>
 
         <div className="basis-1/10">
           <Select
             menuPosition="fixed"
-            id="vegetable"
+            id="Options"
             options={unitOptions}
             placeholder="Unit"
             value={store.unit}
+            defaultInputValue=""
+            defaultValue={{ label: "kg", value: "kg" }}
             onChange={(value) => setStore({ ...store, unit: value })}
             required={true}
           />
+          {errors.unit && (
+            <span className="text-sm text-red-600">{errors.unit}</span>
+          )}
         </div>
         <div className="basis-1/5">
           <input
@@ -82,9 +115,14 @@ function ItemRow({ optionsArray }) {
               })
             }
           />
+          {errors.price && (
+            <span className="text-sm text-red-600">{errors.price}</span>
+          )}
         </div>
-        <div className="basis-1/10">
-          <button className="btn btn-outline-success">Add</button>
+        <div className="basis-1/9">
+          <button className="btn btn-accent" onClick={handleAdd}>
+            Add
+          </button>
         </div>
       </div>
     </>

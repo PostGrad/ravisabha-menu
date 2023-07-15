@@ -1,40 +1,28 @@
 import React from "react";
 
-function TableRow({ rowsData, deleteTableRows, handleChange }) {
+function TableRow({ rowsData, deleteTableRows }) {
   return rowsData.map((data, index) => {
-    const { fullName, emailAddress, salary } = data;
+    const { name, quantity, unit, price } = data;
     return (
       <tr key={index}>
         <td>
-          <input
-            type="text"
-            value={fullName}
-            onChange={(evnt) => handleChange(index, evnt)}
-            name="fullName"
-            className="form-control"
-          />
+          <label>{index + 1}</label>
         </td>
         <td>
-          <input
-            type="text"
-            value={emailAddress}
-            onChange={(evnt) => handleChange(index, evnt)}
-            name="emailAddress"
-            className="form-control"
-          />{" "}
+          <label>{name.value}</label>
         </td>
         <td>
-          <input
-            type="text"
-            value={salary}
-            onChange={(evnt) => handleChange(index, evnt)}
-            name="salary"
-            className="form-control"
-          />{" "}
+          <label>{quantity}</label>
+        </td>
+        <td>
+          <label>{unit.value}</label>
+        </td>
+        <td>
+          <label>{price}</label>
         </td>
         <td>
           <button
-            className="btn btn-outline-danger"
+            className="btn btn-error"
             onClick={() => deleteTableRows(index)}
           >
             x
