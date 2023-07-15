@@ -5,10 +5,18 @@ import { registerLocale } from "react-datepicker";
 import { enIN } from "date-fns/locale";
 import { parseISO } from "date-fns";
 import Select from "react-select";
-import ConfirmDialog from "./Confirm";
+import ConfirmDialog from "./confirmModal/Confirm";
 import * as yup from "yup";
 import { MenuItems } from "../data/eventStore";
+import {
+  Vegetables,
+  Grocery,
+  DairyItems,
+  Beverages,
+} from "../data/ingrediantsData";
 import "react-datepicker/dist/react-datepicker.css";
+import TableRow from "./itemList/TableRow";
+import ItemRow from "./itemList/ItemRow";
 
 const DetailedEvent = () => {
   const [NewEventStore, setNewEventStore] = useState({
@@ -97,6 +105,28 @@ const DetailedEvent = () => {
   const handleDelete = (e) => {
     e.preventDefault();
     console.log("Delete clicked");
+  };
+  const [rowsData, setRowsData] = useState([]);
+
+  const addTableRows = () => {
+    const rowsInput = {
+      fullName: "",
+      emailAddress: "",
+      salary: "",
+    };
+    setRowsData([...rowsData, rowsInput]);
+  };
+  const deleteTableRows = (index) => {
+    const rows = [...rowsData];
+    rows.splice(index, 1);
+    setRowsData(rows);
+  };
+
+  const handleChange = (index, evnt) => {
+    const { name, value } = evnt.target;
+    const rowsInput = [...rowsData];
+    rowsInput[index][name] = value;
+    setRowsData(rowsInput);
   };
 
   return (
@@ -359,30 +389,48 @@ const DetailedEvent = () => {
                 </div>
               </div>
             </div>
-            <div className="grid gap-6 mb-6 md:grid-cols-2">
-              <div>
-                <button className="btn btn-primary" onClick={handleSubmit}>
-                  Add Vegetables
-                </button>
+            <div className="collapse bg-base-200">
+              <input type="checkbox" />
+              <div className="collapse-title text-xl font-medium">
+                Add Vegetables
               </div>
-              <div>
-                <button
-                  className="btn btn-error"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setConfirmOpen(true);
-                  }}
-                >
-                  Delete
-                </button>
-                <ConfirmDialog
-                  title="Delete Event?"
-                  open={confirmOpen}
-                  onClose={() => setConfirmOpen(false)}
-                  onConfirm={(e) => handleDelete(e)}
-                >
-                  Are you sure you want to delete this event?
-                </ConfirmDialog>
+              <div className="collapse-content">
+                <div>
+                  <ItemRow optionsArray={Vegetables} />
+                </div>
+                {rowsData.length > 0 && (
+                  <div className="container">
+                    <div className="row">
+                      <div className="col-sm-8">
+                        <table className="table">
+                          <thead>
+                            <tr>
+                              <th>Full Name</th>
+                              <th>Email Address</th>
+                              <th>Salary</th>
+                              <th>
+                                <button
+                                  className="btn btn-outline-success"
+                                  onClick={addTableRows}
+                                >
+                                  +
+                                </button>
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <TableRow
+                              rowsData={rowsData}
+                              deleteTableRows={deleteTableRows}
+                              handleChange={handleChange}
+                            />
+                          </tbody>
+                        </table>
+                      </div>
+                      <div className="col-sm-4"></div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </form>

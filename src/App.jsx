@@ -3,7 +3,7 @@ import EventList from "./components/EventList";
 import Menubar from "./components/Menubar";
 import EventEntryForm from "./components/EventEntryForm";
 import DetailedEvent from "./components/DetailedEvent";
-import ItemRow from "./components/ItemRow";
+import ItemRow from "./components/itemList/ItemRow";
 
 function App() {
   return (

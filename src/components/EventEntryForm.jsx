@@ -5,7 +5,7 @@ import { registerLocale } from "react-datepicker";
 import { enIN } from "date-fns/locale";
 import { parseISO } from "date-fns";
 import Select from "react-select";
-import ConfirmDialog from "./Confirm";
+import ConfirmDialog from "./confirmModal/Confirm";
 import * as yup from "yup";
 import { MenuItems } from "../data/eventStore";
 import "react-datepicker/dist/react-datepicker.css";
