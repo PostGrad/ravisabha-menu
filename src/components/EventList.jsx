@@ -8,9 +8,22 @@ function EventList() {
 
   const events = useAppStore((state) => state.eventListData);
   const handleEditClick = (eventId) => {
-    console.log("Edit clicked", eventId, events);
-    navigate("/evententryform", { state: events[eventId - 1] });
+    console.log("edit clicked", eventId);
+
+    navigate("/evententryform", {
+      state: events.filter((e) => e.id === eventId)[0],
+    });
   };
+
+  const handleMoreDetailsClick = (eventId) => (e) => {
+    e.stopPropagation();
+    console.log("more details clicked", eventId);
+
+    navigate("/detailedevent", {
+      state: events.filter((e) => e.id === eventId)[0],
+    });
+  };
+
   return (
     <div className="overflow-x-auto w-full">
       <table className="table w-full">
@@ -77,7 +90,9 @@ function EventList() {
                 <Button onClick={handleEditClick}>Edit</Button>
               </th> */}
               <th>
-                <Button>More Details</Button>
+                <Button onClick={handleMoreDetailsClick(event.id)}>
+                  More Details
+                </Button>
               </th>
             </tr>
           ))}

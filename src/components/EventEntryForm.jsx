@@ -22,7 +22,6 @@ const EventEntryForm = () => {
     totalExpense: "",
     receivedAmount: "",
   });
-  const { state } = useLocation();
   const addEvent = useAppStore((state) => state.addEvent);
   const updateEvent = useAppStore((state) => state.updateEvent);
   const deleteEvent = useAppStore((state) => state.deleteEvent);
@@ -47,6 +46,8 @@ const EventEntryForm = () => {
       .number()
       .positive("Received amount must be a positive number."),
   });
+  const { state } = useLocation();
+
   useEffect(() => {
     if (!!state) {
       let tempStore = {
@@ -92,12 +93,12 @@ const EventEntryForm = () => {
       newEvent.bhojanCount = parseFloat(newEvent.bhojanCount);
       newEvent.receivedAmount = parseFloat(newEvent.receivedAmount);
       if (!!newEvent.id) {
-        console.log("current event ==>> ", newEvent);
+        // console.log("current event ==>> ", newEvent);
 
         updateEvent(newEvent);
       } else {
         newEvent.id = Math.ceil(Math.random * 1000000);
-        console.log("new event ==>> ", newEvent);
+        // console.log("new event ==>> ", newEvent);
 
         addEvent(newEvent);
       }
