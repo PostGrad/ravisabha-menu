@@ -7,41 +7,42 @@ import { parseISO } from "date-fns";
 import Select from "react-select";
 import ConfirmDialog from "./confirmModal/Confirm";
 import * as yup from "yup";
-import { MenuItems } from "../data/eventStore";
 import "react-datepicker/dist/react-datepicker.css";
+import useAppStore from "../data/AppStore";
 
 const EventEntryForm = () => {
   const [NewEventStore, setNewEventStore] = useState({
-    name: "",
+    eventName: "",
     date: new Date(),
     place: "",
     menuItems: [],
-    host: "",
-    phone: "",
-    count: "",
+    hostName: "",
+    phoneNumber: "",
+    bhojanCount: "",
     totalExpense: "",
     receivedAmount: "",
   });
   const { state } = useLocation();
-
+  const addEvent = useAppStore((state) => state.addEvent);
+  const updateEvent = useAppStore((state) => state.updateEvent);
+  const deleteEvent = useAppStore((state) => state.deleteEvent);
   const [errors, setErrors] = useState({});
   const [confirmOpen, setConfirmOpen] = useState(false);
   const navigate = useNavigate();
   const locale = registerLocale("enIN", enIN);
 
-  const menuItemsOptions = MenuItems.map((item) => ({
-    value: item,
-    label: item,
-  }));
+  const menuItemsOptions = useAppStore((state) => state.MenuItems).map(
+    (item) => ({
+      value: item,
+      label: item,
+    })
+  );
 
   const schema = yup.object().shape({
-    name: yup.string().required("Name is required."),
+    eventName: yup.string().required("Name is required."),
     date: yup.date().required("Date is required."),
     menuItems: yup.array().min(1, "Menu items are required."),
-    count: yup.number().positive("Count must be a positive number."),
-    totalExpense: yup
-      .number()
-      .positive("Total expense must be a positive number."),
+    bhojanCount: yup.number().positive("Count must be a positive number."),
     receivedAmount: yup
       .number()
       .positive("Received amount must be a positive number."),
@@ -49,29 +50,30 @@ const EventEntryForm = () => {
   useEffect(() => {
     if (!!state) {
       let tempStore = {
-        name: state.eventName,
+        id: state.id,
+        eventName: state.eventName,
         date: parseISO(state.date),
         place: state.place,
         menuItems: state.menuItems.map((item) => ({
           value: item,
           label: item,
         })),
-        host: state.hostName,
-        phone: state.phoneNumber,
-        count: state.bhojanCount,
+        hostName: state.hostName,
+        phoneNumber: state.phoneNumber,
+        bhojanCount: state.bhojanCount,
         totalExpense: state.totalExpense,
         receivedAmount: state.receivedAmount,
       };
       setNewEventStore(tempStore);
     } else {
       setNewEventStore({
-        name: "",
+        eventName: "",
         date: new Date(),
         place: "",
         menuItems: [],
-        host: "",
-        phone: "",
-        count: "",
+        hostName: "",
+        phoneNumber: "",
+        bhojanCount: "",
         totalExpense: "",
         receivedAmount: "",
       });
@@ -84,6 +86,22 @@ const EventEntryForm = () => {
       await schema.validate(NewEventStore, { abortEarly: false });
       console.log("after validate call");
       setErrors({});
+      let newEvent = structuredClone(NewEventStore);
+      newEvent.menuItems = newEvent.menuItems.map((item) => item.value);
+      newEvent.date = newEvent.date.toISOString();
+      newEvent.bhojanCount = parseFloat(newEvent.bhojanCount);
+      newEvent.receivedAmount = parseFloat(newEvent.receivedAmount);
+      if (!!newEvent.id) {
+        console.log("current event ==>> ", newEvent);
+
+        updateEvent(newEvent);
+      } else {
+        newEvent.id = Math.ceil(Math.random * 1000000);
+        console.log("new event ==>> ", newEvent);
+
+        addEvent(newEvent);
+      }
+
       navigate("/");
     } catch (err) {
       const newErrors = err.inner.reduce((acc, err) => {
@@ -97,6 +115,8 @@ const EventEntryForm = () => {
   const handleDelete = (e) => {
     e.preventDefault();
     console.log("Delete clicked");
+    deleteEvent(NewEventStore.id);
+    navigate("/");
   };
 
   return (
@@ -109,25 +129,27 @@ const EventEntryForm = () => {
             <div className="grid gap-6 mb-6 md:grid-cols-2">
               <div>
                 <div>
-                  <label className="label" htmlFor="name" />
+                  <label className="label" htmlFor="eventName" />
                   Name:
                 </div>
                 <div>
                   <input
                     className="input input-bordered w-full max-w-xs"
-                    id="name"
+                    id="eventName"
                     type="text"
-                    value={NewEventStore.name}
+                    value={NewEventStore.eventName}
                     onChange={(e) =>
                       setNewEventStore({
                         ...NewEventStore,
-                        name: e.target.value,
+                        eventName: e.target.value,
                       })
                     }
                   />
                 </div>
-                {errors.name && (
-                  <span className="text-sm text-red-600">{errors.name}</span>
+                {errors.eventName && (
+                  <span className="text-sm text-red-600">
+                    {errors.eventName}
+                  </span>
                 )}
               </div>
               <div>
@@ -201,17 +223,20 @@ const EventEntryForm = () => {
             </div>
             <div className="mb-6">
               <div>
-                <label className="label" htmlFor="host" />
+                <label className="label" htmlFor="hostName" />
                 Host:
               </div>
               <div>
                 <input
                   className="input input-bordered w-full max-w-xs"
-                  id="host"
+                  id="hostName"
                   type="text"
-                  value={NewEventStore.host}
+                  value={NewEventStore.hostName}
                   onChange={(e) =>
-                    setNewEventStore({ ...NewEventStore, host: e.target.value })
+                    setNewEventStore({
+                      ...NewEventStore,
+                      hostName: e.target.value,
+                    })
                   }
                 />
               </div>
@@ -219,19 +244,19 @@ const EventEntryForm = () => {
             <div className="grid gap-6 mb-6 md:grid-cols-2">
               <div>
                 <div>
-                  <label className="label" htmlFor="phone" />
+                  <label className="label" htmlFor="phoneNumber" />
                   Phone Number:
                 </div>
                 <div>
                   <input
                     className="input input-bordered w-full max-w-xs"
-                    id="phone"
+                    id="phoneNumber"
                     type="text"
-                    value={NewEventStore.phone}
+                    value={NewEventStore.phoneNumber}
                     onChange={(e) =>
                       setNewEventStore({
                         ...NewEventStore,
-                        phone: e.target.value,
+                        phoneNumber: e.target.value,
                       })
                     }
                   />
@@ -239,25 +264,27 @@ const EventEntryForm = () => {
               </div>
               <div>
                 <div>
-                  <label className="label" htmlFor="count" />
+                  <label className="label" htmlFor="bhojanCount" />
                   Count:
                 </div>
                 <div>
                   <input
                     className="input input-bordered w-full max-w-xs"
-                    id="count"
+                    id="bhojanCount"
                     type="text"
-                    value={NewEventStore.count}
+                    value={NewEventStore.bhojanCount}
                     onChange={(e) =>
                       setNewEventStore({
                         ...NewEventStore,
-                        count: e.target.value,
+                        bhojanCount: e.target.value,
                       })
                     }
                   />
                 </div>
-                {errors.count && (
-                  <span className="text-sm text-red-600">{errors.count}</span>
+                {errors.bhojanCount && (
+                  <span className="text-sm text-red-600">
+                    {errors.bhojanCount}
+                  </span>
                 )}
               </div>
               <div>

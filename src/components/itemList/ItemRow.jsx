@@ -92,8 +92,6 @@ function ItemRow({ optionsArray, handleChange, placeholder }) {
             options={unitOptions}
             placeholder="Unit"
             value={store.unit}
-            defaultInputValue=""
-            defaultValue={{ label: "kg", value: "kg" }}
             onChange={(value) => setStore({ ...store, unit: value })}
             required={true}
           />

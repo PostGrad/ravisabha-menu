@@ -1,13 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-
-import { eventListData } from "../data/eventlistData";
+import useAppStore from "../data/AppStore";
 import { Button } from "react-daisyui";
 
 function EventList() {
   const navigate = useNavigate();
 
-  const events = structuredClone(eventListData);
+  const events = useAppStore((state) => state.eventListData);
   const handleEditClick = (eventId) => {
     console.log("Edit clicked", eventId, events);
     navigate("/evententryform", { state: events[eventId - 1] });

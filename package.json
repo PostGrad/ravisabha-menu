@@ -17,7 +17,8 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.11.2",
     "react-select": "^5.7.3",
-    "yup": "^1.2.0"
+    "yup": "^1.2.0",
+    "zustand": "^4.3.9"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.9",
