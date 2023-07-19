@@ -18,9 +18,9 @@ const EventEntryForm = () => {
     menuItems: [],
     hostName: "",
     phoneNumber: "",
-    bhojanCount: "",
-    totalExpense: "",
-    receivedAmount: "",
+    bhojanCount: 0,
+    totalExpense: 0,
+    receivedAmount: 0,
   });
   const addEvent = useAppStore((state) => state.addEvent);
   const updateEvent = useAppStore((state) => state.updateEvent);
@@ -41,10 +41,10 @@ const EventEntryForm = () => {
     eventName: yup.string().required("Name is required."),
     date: yup.date().required("Date is required."),
     menuItems: yup.array().min(1, "Menu items are required."),
-    bhojanCount: yup.number().positive("Count must be a positive number."),
+    bhojanCount: yup.number().min(0, "Count must be a positive number."),
     receivedAmount: yup
       .number()
-      .positive("Received amount must be a positive number."),
+      .min(0, "Received amount must be a positive number."),
   });
   const { state } = useLocation();
 
@@ -74,9 +74,9 @@ const EventEntryForm = () => {
         menuItems: [],
         hostName: "",
         phoneNumber: "",
-        bhojanCount: "",
-        totalExpense: "",
-        receivedAmount: "",
+        bhojanCount: 0,
+        totalExpense: 0,
+        receivedAmount: 0,
       });
     }
   }, [state]);
@@ -106,7 +106,7 @@ const EventEntryForm = () => {
       navigate("/");
     } catch (err) {
       const newErrors = err.inner.reduce((acc, err) => {
-        console.log(err);
+        //console.log(err);
         return { ...acc, [err.path]: err.message };
       }, {});
       setErrors(newErrors);
