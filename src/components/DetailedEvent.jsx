@@ -357,7 +357,7 @@ const DetailedEvent = () => {
                   />
                 </div>
                 {rowsData.length > 0 && (
-                  <div className="flex justify-center ">
+                  <div className="flex justify-center">
                     <div className="row">
                       <div className="col-sm-8 ">
                         <table className="table">

@@ -15,6 +15,7 @@ const EventEntryForm = () => {
     eventName: "",
     date: new Date(),
     place: "",
+    isOpen: true,
     menuItems: [],
     hostName: "",
     phoneNumber: "",
@@ -55,6 +56,7 @@ const EventEntryForm = () => {
         eventName: state.eventName,
         date: parseISO(state.date),
         place: state.place,
+        isOpen: state.isOpen,
         menuItems: state.menuItems.map((item) => ({
           value: item,
           label: item,
@@ -71,6 +73,7 @@ const EventEntryForm = () => {
         eventName: "",
         date: new Date(),
         place: "",
+        isOpen: true,
         menuItems: [],
         hostName: "",
         phoneNumber: "",
@@ -178,24 +181,46 @@ const EventEntryForm = () => {
                 </div>
               </div>
             </div>
-            <div className="mb-6">
+            <div className="mb-6 grid gap-6 mb-6 md:grid-cols-2">
               <div>
-                <label className="label" htmlFor="place" />
-                Place:
+                <div>
+                  <label className="label" htmlFor="place" />
+                  Place:
+                </div>
+                <div>
+                  <input
+                    className="input input-bordered w-full max-w-xs"
+                    id="place"
+                    type="text"
+                    value={NewEventStore.place}
+                    onChange={(e) =>
+                      setNewEventStore({
+                        ...NewEventStore,
+                        place: e.target.value,
+                      })
+                    }
+                  />
+                </div>
               </div>
-              <div>
-                <input
-                  className="input input-bordered w-full max-w-xs"
-                  id="place"
-                  type="text"
-                  value={NewEventStore.place}
-                  onChange={(e) =>
-                    setNewEventStore({
-                      ...NewEventStore,
-                      place: e.target.value,
-                    })
-                  }
-                />
+              <div className="grid items-center">
+                <div>
+                  <label className="label" htmlFor="isOpen">
+                    Is Event Open
+                  </label>
+                </div>
+                <div>
+                  <input
+                    type="checkbox"
+                    className="toggle toggle-accent"
+                    checked={NewEventStore.isOpen}
+                    onChange={(e) =>
+                      setNewEventStore({
+                        ...NewEventStore,
+                        isOpen: e.target.checked,
+                      })
+                    }
+                  />
+                </div>
               </div>
             </div>
             <div className="mb-6">

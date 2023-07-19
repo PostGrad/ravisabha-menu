@@ -10,6 +10,7 @@ export const eventListData = [
     bhojanCount: 145,
     totalExpense: 5000,
     receivedAmount: 6000,
+    isOpen: false,
   },
   {
     id: 2,
@@ -22,6 +23,7 @@ export const eventListData = [
     bhojanCount: 65,
     totalExpense: 6000,
     receivedAmount: 6000,
+    isOpen: false,
   },
   {
     id: 3,
@@ -34,5 +36,6 @@ export const eventListData = [
     bhojanCount: 50,
     totalExpense: 1500,
     receivedAmount: 1500,
+    isOpen: false,
   },
 ];
