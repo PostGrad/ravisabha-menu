@@ -96,12 +96,12 @@ const EventEntryForm = () => {
       newEvent.bhojanCount = parseFloat(newEvent.bhojanCount);
       newEvent.receivedAmount = parseFloat(newEvent.receivedAmount);
       if (!!newEvent.id) {
-        // console.log("current event ==>> ", newEvent);
+        console.log("current event ==>> ", newEvent);
 
         updateEvent(newEvent);
       } else {
-        newEvent.id = Math.ceil(Math.random * 1000000);
-        // console.log("new event ==>> ", newEvent);
+        newEvent.id = Math.ceil(Math.random() * 1000000);
+        console.log("new event ==>> ", newEvent);
 
         addEvent(newEvent);
       }

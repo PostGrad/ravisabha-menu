@@ -44,7 +44,7 @@ function EventList() {
             <th>Count</th>
             <th>Total Expense</th>
             <th>Received Amount</th>
-            {/* <th></th> */}
+            <th>Is Event Open</th>
             <th></th>
           </tr>
         </thead>
@@ -61,7 +61,6 @@ function EventList() {
                 <div className="flex items-center space-x-3">
                   <div>
                     <div className="font-bold">{event.eventName}</div>
-                    {/* <div className="text-sm opacity-50">United States</div> */}
                   </div>
                 </div>
               </td>
@@ -85,7 +84,18 @@ function EventList() {
               <td>{event.bhojanCount}</td>
               <td>{event.totalExpense}</td>
               <td>{event.receivedAmount}</td>
-
+              <td>
+                <div className="grid justify-items">
+                  <div>
+                    <input
+                      type="checkbox"
+                      className="toggle toggle-accent"
+                      checked={event.isOpen}
+                      disabled
+                    />
+                  </div>
+                </div>
+              </td>
               {/* <th>
                 <Button onClick={handleEditClick}>Edit</Button>
               </th> */}
@@ -110,7 +120,7 @@ function EventList() {
             <th>Count</th>
             <th>Total Expense</th>
             <th>Received Amount</th>
-            {/* <th></th> */}
+            <th>Is Event Open</th>
             <th></th>
           </tr>
         </tfoot>
