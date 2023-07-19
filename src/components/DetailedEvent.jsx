@@ -7,7 +7,6 @@ import { parseISO } from "date-fns";
 import Select from "react-select";
 import ConfirmDialog from "./confirmModal/Confirm";
 import * as yup from "yup";
-import { MenuItems } from "../data/eventStore";
 import {
   Vegetables,
   Grocery,
@@ -17,6 +16,7 @@ import {
 import "react-datepicker/dist/react-datepicker.css";
 import TableRow from "./itemList/TableRow";
 import ItemRow from "./itemList/ItemRow";
+import useAppStore from "../data/AppStore";
 
 const DetailedEvent = () => {
   const [NewEventStore, setNewEventStore] = useState({
@@ -37,26 +37,27 @@ const DetailedEvent = () => {
   const navigate = useNavigate();
   const locale = registerLocale("enIN", enIN);
 
-  const menuItemsOptions = MenuItems.map((item) => ({
-    value: item,
-    label: item,
-  }));
+  const menuItemsOptions = useAppStore((state) => state.MenuItems).map(
+    (item) => ({
+      value: item,
+      label: item,
+    })
+  );
 
   const schema = yup.object().shape({
     name: yup.string().required("Name is required."),
     date: yup.date().required("Date is required."),
     menuItems: yup.array().min(1, "Menu items are required."),
     count: yup.number().positive("Count must be a positive number."),
-    totalExpense: yup
-      .number()
-      .positive("Total expense must be a positive number."),
     receivedAmount: yup
       .number()
       .positive("Received amount must be a positive number."),
   });
+
   useEffect(() => {
     if (!!state) {
       let tempStore = {
+        id: state.id,
         name: state.eventName,
         date: parseISO(state.date),
         place: state.place,
@@ -124,264 +125,228 @@ const DetailedEvent = () => {
       <div className="grid grid-cols-10 w-full">
         <div className="" />
         <div className="col-span-8">
-          <div className="grid gap-6 mb-6 md:grid-cols-2">
-            <div>
-              <div>
-                <label className="label" htmlFor="name" />
-                Event Name:
-              </div>
-              <div>
-                <input
-                  className="input input-bordered w-full max-w-xs"
-                  id="name"
-                  type="text"
-                  value={NewEventStore.name}
-                  onChange={(e) =>
-                    setNewEventStore({
-                      ...NewEventStore,
-                      name: e.target.value,
-                    })
-                  }
-                />
-              </div>
-              {errors.name && (
-                <span className="text-sm text-red-600">{errors.name}</span>
-              )}
+          <div className="collapse bg-base-200">
+            <input type="checkbox" />
+            <div className="collapse-title text-xl font-medium">
+              Main Details
             </div>
-            <div>
-              <div>
-                <label className="label" htmlFor="date" />
-                Date:
-              </div>
-              <div>
-                <DatePicker
-                  className="input input-bordered w-full max-w-xs"
-                  locale={locale}
-                  dateFormat="dd-MM-yyyy"
-                  placeholderText="Select Date 🗓️"
-                  selected={NewEventStore.date}
-                  onChange={(value) =>
-                    setNewEventStore({ ...NewEventStore, date: value })
-                  }
-                />
-
-                {errors.date && (
-                  <span className="text-sm text-red-600">
-                    {errors.date ? "Date is required." : ""}
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
-          <div className="mb-6">
-            <div>
-              <label className="label" htmlFor="place" />
-              Place:
-            </div>
-            <div>
-              <input
-                className="input input-bordered w-full max-w-xs"
-                id="place"
-                type="text"
-                value={NewEventStore.place}
-                onChange={(e) =>
-                  setNewEventStore({
-                    ...NewEventStore,
-                    place: e.target.value,
-                  })
-                }
-              />
-            </div>
-          </div>
-          <div className="mb-6">
-            <div>
-              <label htmlFor="MenuItems" />
-              Menu Items:
-            </div>
-            <div>
-              <Select
-                id="MenuItems"
-                options={menuItemsOptions}
-                placeholder="Add menu items..."
-                isMulti
-                value={NewEventStore.menuItems}
-                onChange={(value) =>
-                  setNewEventStore({ ...NewEventStore, menuItems: value })
-                }
-                required={true}
-              />
-              {errors.menuItems && (
-                <span className="text-sm text-red-600">{errors.menuItems}</span>
-              )}
-            </div>
-          </div>
-          <div className="mb-6">
-            <div>
-              <label className="label" htmlFor="host" />
-              Host:
-            </div>
-            <div>
-              <input
-                className="input input-bordered w-full max-w-xs"
-                id="host"
-                type="text"
-                value={NewEventStore.host}
-                onChange={(e) =>
-                  setNewEventStore({ ...NewEventStore, host: e.target.value })
-                }
-              />
-            </div>
-          </div>
-          <div className="grid gap-6 mb-6 md:grid-cols-2">
-            <div>
-              <div>
-                <label className="label" htmlFor="phone" />
-                Phone Number:
-              </div>
-              <div>
-                <input
-                  className="input input-bordered w-full max-w-xs"
-                  id="phone"
-                  type="text"
-                  value={NewEventStore.phone}
-                  onChange={(e) =>
-                    setNewEventStore({
-                      ...NewEventStore,
-                      phone: e.target.value,
-                    })
-                  }
-                />
-              </div>
-            </div>
-            <div>
-              <div>
-                <label className="label" htmlFor="count" />
-                Count:
-              </div>
-              <div>
-                <input
-                  className="input input-bordered w-full max-w-xs"
-                  id="count"
-                  type="text"
-                  value={NewEventStore.count}
-                  onChange={(e) =>
-                    setNewEventStore({
-                      ...NewEventStore,
-                      count: e.target.value,
-                    })
-                  }
-                />
-              </div>
-              {errors.count && (
-                <span className="text-sm text-red-600">{errors.count}</span>
-              )}
-            </div>
-            <div>
-              <div>
-                <label className="label" htmlFor="totalExpense" />
-                Total Expense:
-              </div>
-              <div>
-                <input
-                  disabled
-                  className="input input-bordered w-full max-w-xs"
-                  id="totalExpense"
-                  type="text"
-                  value={NewEventStore.totalExpense}
-                  // onChange={(e) =>
-                  //   setNewEventStore({
-                  //     ...NewEventStore,
-                  //     totalExpense: e.target.value,
-                  //   })
-                  // }
-                />
-              </div>
-              {/* {errors.totalExpense && (
-                  <span className="text-sm text-red-600">
-                    {errors.totalExpense}
-                  </span>
-                )} */}
-            </div>
-            <div>
-              <div>
-                <label className="label" htmlFor="receivedAmount" />
-                Received Amount:
-              </div>
-              <div>
-                <input
-                  className="input input-bordered w-full max-w-xs"
-                  id="receivedAmount"
-                  type="text"
-                  value={NewEventStore.receivedAmount}
-                  onChange={(e) =>
-                    setNewEventStore({
-                      ...NewEventStore,
-                      receivedAmount: e.target.value,
-                    })
-                  }
-                />
-              </div>
-              {errors.receivedAmount && (
-                <span className="text-sm text-red-600">
-                  {errors.receivedAmount}
-                </span>
-              )}
-            </div>
-          </div>
-          <form>
-            <div className="grid gap-6 mb-6 md:grid-cols-2">
-              <div>
+            <div className="collapse-content">
+              <div className="grid gap-6 mb-6 md:grid-cols-2">
                 <div>
-                  <label className="label" htmlFor="name" />
-                  Event Name:
+                  <div>
+                    <label className="label" htmlFor="name" />
+                    Event Name:
+                  </div>
+                  <div>
+                    <input
+                      className="input input-bordered w-full max-w-xs"
+                      id="name"
+                      type="text"
+                      value={NewEventStore.name}
+                      onChange={(e) =>
+                        setNewEventStore({
+                          ...NewEventStore,
+                          name: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                  {errors.name && (
+                    <span className="text-sm text-red-600">{errors.name}</span>
+                  )}
+                </div>
+                <div>
+                  <div>
+                    <label className="label" htmlFor="date" />
+                    Date:
+                  </div>
+                  <div>
+                    <DatePicker
+                      className="input input-bordered w-full max-w-xs"
+                      locale={locale}
+                      dateFormat="dd-MM-yyyy"
+                      placeholderText="Select Date 🗓️"
+                      selected={NewEventStore.date}
+                      onChange={(value) =>
+                        setNewEventStore({ ...NewEventStore, date: value })
+                      }
+                    />
+
+                    {errors.date && (
+                      <span className="text-sm text-red-600">
+                        {errors.date ? "Date is required." : ""}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="mb-6">
+                <div>
+                  <label className="label" htmlFor="place" />
+                  Place:
                 </div>
                 <div>
                   <input
                     className="input input-bordered w-full max-w-xs"
-                    id="name"
+                    id="place"
                     type="text"
-                    value={NewEventStore.name}
+                    value={NewEventStore.place}
                     onChange={(e) =>
                       setNewEventStore({
                         ...NewEventStore,
-                        name: e.target.value,
+                        place: e.target.value,
                       })
                     }
                   />
                 </div>
-                {errors.name && (
-                  <span className="text-sm text-red-600">{errors.name}</span>
-                )}
               </div>
-              <div>
+              <div className="mb-6">
                 <div>
-                  <label className="label" htmlFor="date" />
-                  Date:
+                  <label htmlFor="MenuItems" />
+                  Menu Items:
                 </div>
                 <div>
-                  <DatePicker
-                    className="input input-bordered w-full max-w-xs"
-                    locale={locale}
-                    dateFormat="dd-MM-yyyy"
-                    placeholderText="Select Date 🗓️"
-                    selected={NewEventStore.date}
+                  <Select
+                    id="MenuItems"
+                    options={menuItemsOptions}
+                    placeholder="Add menu items..."
+                    isMulti
+                    value={NewEventStore.menuItems}
                     onChange={(value) =>
-                      setNewEventStore({ ...NewEventStore, date: value })
+                      setNewEventStore({ ...NewEventStore, menuItems: value })
+                    }
+                    required={true}
+                  />
+                  {errors.menuItems && (
+                    <span className="text-sm text-red-600">
+                      {errors.menuItems}
+                    </span>
+                  )}
+                </div>
+              </div>
+              <div className="mb-6">
+                <div>
+                  <label className="label" htmlFor="host" />
+                  Host:
+                </div>
+                <div>
+                  <input
+                    className="input input-bordered w-full max-w-xs"
+                    id="host"
+                    type="text"
+                    value={NewEventStore.host}
+                    onChange={(e) =>
+                      setNewEventStore({
+                        ...NewEventStore,
+                        host: e.target.value,
+                      })
                     }
                   />
-
-                  {errors.date && (
+                </div>
+              </div>
+              <div className="grid gap-6 mb-6 md:grid-cols-2">
+                <div>
+                  <div>
+                    <label className="label" htmlFor="phone" />
+                    Phone Number:
+                  </div>
+                  <div>
+                    <input
+                      className="input input-bordered w-full max-w-xs"
+                      id="phone"
+                      type="text"
+                      value={NewEventStore.phone}
+                      onChange={(e) =>
+                        setNewEventStore({
+                          ...NewEventStore,
+                          phone: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                </div>
+                <div>
+                  <div>
+                    <label className="label" htmlFor="count" />
+                    Count:
+                  </div>
+                  <div>
+                    <input
+                      className="input input-bordered w-full max-w-xs"
+                      id="count"
+                      type="text"
+                      value={NewEventStore.count}
+                      onChange={(e) =>
+                        setNewEventStore({
+                          ...NewEventStore,
+                          count: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                  {errors.count && (
+                    <span className="text-sm text-red-600">{errors.count}</span>
+                  )}
+                </div>
+                <div>
+                  <div>
+                    <label className="label" htmlFor="totalExpense" />
+                    Total Expense:
+                  </div>
+                  <div>
+                    <input
+                      disabled
+                      className="input input-bordered w-full max-w-xs"
+                      id="totalExpense"
+                      type="text"
+                      value={NewEventStore.totalExpense}
+                      // onChange={(e) =>
+                      //   setNewEventStore({
+                      //     ...NewEventStore,
+                      //     totalExpense: e.target.value,
+                      //   })
+                      // }
+                    />
+                  </div>
+                  {/* {errors.totalExpense && (
+                  <span className="text-sm text-red-600">
+                    {errors.totalExpense}
+                  </span>
+                )} */}
+                </div>
+                <div>
+                  <div>
+                    <label className="label" htmlFor="receivedAmount" />
+                    Received Amount:
+                  </div>
+                  <div>
+                    <input
+                      className="input input-bordered w-full max-w-xs"
+                      id="receivedAmount"
+                      type="text"
+                      value={NewEventStore.receivedAmount}
+                      onChange={(e) =>
+                        setNewEventStore({
+                          ...NewEventStore,
+                          receivedAmount: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                  {errors.receivedAmount && (
                     <span className="text-sm text-red-600">
-                      {errors.date ? "Date is required." : ""}
+                      {errors.receivedAmount}
                     </span>
                   )}
                 </div>
               </div>
             </div>
+          </div>
+          <form>
             <div className="collapse bg-base-200">
               <input type="checkbox" />
               <div className="collapse-title text-xl font-medium">
-                Add Vegetables
+                Add Vegetable Expenses
               </div>
               <div className="collapse-content">
                 <div>
