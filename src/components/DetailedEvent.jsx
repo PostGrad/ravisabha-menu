@@ -30,6 +30,7 @@ const DetailedEvent = () => {
     totalExpense: "",
     receivedAmount: "",
   });
+
   const { state } = useLocation();
 
   const [errors, setErrors] = useState({});
@@ -43,7 +44,9 @@ const DetailedEvent = () => {
       label: item,
     })
   );
-
+  const currentEventDetails = useAppStore((state) =>
+    state.eventDetailsData.find((eve) => eve.eventId === state.id)
+  );
   const schema = yup.object().shape({
     name: yup.string().required("Name is required."),
     date: yup.date().required("Date is required."),
@@ -72,6 +75,17 @@ const DetailedEvent = () => {
         receivedAmount: state.receivedAmount,
       };
       setNewEventStore(tempStore);
+
+      let { itemId, itemName, quantity, unit, price } =
+        currentEventDetails.vegetableExpenses;
+      let tempVegRowsData = {
+        id: itemId,
+        name: itemName,
+        quantity,
+        unit,
+        price,
+      };
+      setVegRowsData([...vegRowsData, tempVegRowsData]);
     } else {
       setNewEventStore({
         name: "",
@@ -85,7 +99,7 @@ const DetailedEvent = () => {
         receivedAmount: "",
       });
     }
-  }, [state]);
+  }, [state, currentEventDetails]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -107,16 +121,16 @@ const DetailedEvent = () => {
     e.preventDefault();
     console.log("Delete clicked");
   };
-  const [rowsData, setRowsData] = useState([]);
+  const [vegRowsData, setVegRowsData] = useState([]);
 
   const deleteTableRows = (index) => {
-    const rows = [...rowsData];
+    const rows = [...vegRowsData];
     rows.splice(index, 1);
-    setRowsData(rows);
+    setVegRowsData(rows);
   };
 
   const handleChange = (rowObj) => {
-    setRowsData([...rowsData, rowObj]);
+    setVegRowsData([...vegRowsData, rowObj]);
   };
 
   return (
@@ -354,9 +368,10 @@ const DetailedEvent = () => {
                     optionsArray={Vegetables}
                     handleChange={handleChange}
                     placeholder="Vegetables"
+                    eventId={NewEventStore.id}
                   />
                 </div>
-                {rowsData.length > 0 && (
+                {vegRowsData.length > 0 && (
                   <div className="flex justify-center">
                     <div className="row">
                       <div className="col-sm-8 ">
@@ -373,7 +388,7 @@ const DetailedEvent = () => {
                           </thead>
                           <tbody>
                             <TableRow
-                              rowsData={rowsData}
+                              rowsData={vegRowsData}
                               deleteTableRows={deleteTableRows}
                             />
                           </tbody>

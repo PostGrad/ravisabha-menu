@@ -3,14 +3,18 @@ import Select from "react-select";
 import * as yup from "yup";
 
 import { Units } from "../../data/Units";
+import useAppStore from "../../data/AppStore";
 
-function ItemRow({ optionsArray, handleChange, placeholder }) {
+function ItemRow({ optionsArray, handleChange, placeholder, eventId }) {
   const [store, setStore] = useState({
     name: "",
     quantity: "",
     unit: { label: "kg", value: "kg" },
     price: "",
   });
+
+  const addRecord = useAppStore((state) => state.updateEventDetails);
+
   const [errors, setErrors] = useState({});
 
   const schema = yup.object().shape({
@@ -34,7 +38,13 @@ function ItemRow({ optionsArray, handleChange, placeholder }) {
       await schema.validate(store, { abortEarly: false });
       setErrors({});
       console.log("after validate call");
-      handleChange(store);
+      //handleChange(store);
+      let currentEventDetailRecord = {};
+      currentEventDetailRecord.eventId = eventId;
+      currentEventDetailRecord.placeholder = placeholder;
+      currentEventDetailRecord.expenseObj = structuredClone(store);
+      addRecord(currentEventDetailRecord);
+
       setStore({
         name: "",
         quantity: "",

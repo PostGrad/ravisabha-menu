@@ -39,3 +39,18 @@ export const eventListData = [
     isOpen: false,
   },
 ];
+
+export const eventDetailsData = [
+  {
+    eventId: 1,
+    vegetableExpenses: [
+      {
+        itemId: 1,
+        itemName: "Bateta",
+        quantity: 5.5,
+        unit: "kg",
+        price: 90,
+      },
+    ],
+  },
+];
