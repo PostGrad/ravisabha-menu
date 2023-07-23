@@ -2,20 +2,20 @@ import React from "react";
 
 function TableRow({ rowsData, deleteTableRows }) {
   return rowsData.map((data, index) => {
-    const { name, quantity, unit, price } = data;
+    const { itemName, quantity, unit, price } = data;
     return (
       <tr key={index}>
         <td>
           <label>{index + 1}</label>
         </td>
         <td>
-          <label>{name.value}</label>
+          <label>{itemName}</label>
         </td>
         <td>
           <label>{quantity}</label>
         </td>
         <td>
-          <label>{unit.value}</label>
+          <label>{unit}</label>
         </td>
         <td>
           <label>{price}</label>

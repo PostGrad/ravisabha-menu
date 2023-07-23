@@ -31,7 +31,9 @@ const DetailedEvent = () => {
     receivedAmount: "",
   });
 
-  const { state } = useLocation();
+  const {
+    state: { stateProp },
+  } = useLocation();
 
   const [errors, setErrors] = useState({});
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -44,9 +46,13 @@ const DetailedEvent = () => {
       label: item,
     })
   );
+
   const currentEventDetails = useAppStore((state) =>
-    state.eventDetailsData.find((eve) => eve.eventId === state.id)
+    state.eventDetailsData.find((eve) => eve.eventId === stateProp.id)
   );
+
+  console.log("currentEventDetails => ", currentEventDetails);
+
   const schema = yup.object().shape({
     name: yup.string().required("Name is required."),
     date: yup.date().required("Date is required."),
@@ -58,34 +64,47 @@ const DetailedEvent = () => {
   });
 
   useEffect(() => {
-    if (!!state) {
+    if (!!stateProp) {
       let tempStore = {
-        id: state.id,
-        name: state.eventName,
-        date: parseISO(state.date),
-        place: state.place,
-        menuItems: state.menuItems.map((item) => ({
+        id: stateProp.id,
+        name: stateProp.eventName,
+        date: parseISO(stateProp.date),
+        place: stateProp.place,
+        menuItems: stateProp.menuItems.map((item) => ({
           value: item,
           label: item,
         })),
-        host: state.hostName,
-        phone: state.phoneNumber,
-        count: state.bhojanCount,
-        totalExpense: state.totalExpense,
-        receivedAmount: state.receivedAmount,
+        host: stateProp.hostName,
+        phone: stateProp.phoneNumber,
+        count: stateProp.bhojanCount,
+        totalExpense: stateProp.totalExpense,
+        receivedAmount: stateProp.receivedAmount,
       };
       setNewEventStore(tempStore);
+      console.log("render count => ", currentEventDetails);
+      if (currentEventDetails?.vegetableExpenses) {
+        // let { itemId, itemName, quantity, unit, price } =
+        //   currentEventDetails.vegetableExpenses;
+        // let tempVegRowsData = {
+        //   id: itemId,
+        //   name: itemName,
+        //   quantity,
+        //   unit,
+        //   price,
+        // };
+        let tempVegRowsData = currentEventDetails.vegetableExpenses.map(
+          (record) => ({
+            id: record.itemId,
+            itemName: record.itemName,
+            quantity: record.quantity,
+            unit: record.unit,
+            price: record.price,
+          })
+        );
+        console.log("tempVegRowsData ==>> ", tempVegRowsData);
 
-      let { itemId, itemName, quantity, unit, price } =
-        currentEventDetails.vegetableExpenses;
-      let tempVegRowsData = {
-        id: itemId,
-        name: itemName,
-        quantity,
-        unit,
-        price,
-      };
-      setVegRowsData([...vegRowsData, tempVegRowsData]);
+        setVegRowsData([...tempVegRowsData]);
+      }
     } else {
       setNewEventStore({
         name: "",
@@ -99,7 +118,7 @@ const DetailedEvent = () => {
         receivedAmount: "",
       });
     }
-  }, [state, currentEventDetails]);
+  }, [stateProp, currentEventDetails]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {

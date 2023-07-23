@@ -11,7 +11,7 @@ function EventList() {
     console.log("edit clicked", eventId);
 
     navigate("/evententryform", {
-      state: events.filter((e) => e.id === eventId)[0],
+      state: { stateProp: events.filter((e) => e.id === eventId)[0] },
     });
   };
 
@@ -20,7 +20,7 @@ function EventList() {
     console.log("more details clicked", eventId);
 
     navigate("/detailedevent", {
-      state: events.filter((e) => e.id === eventId)[0],
+      state: { stateProp: events.filter((e) => e.id === eventId)[0] },
     });
   };
 

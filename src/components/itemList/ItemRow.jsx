@@ -7,7 +7,7 @@ import useAppStore from "../../data/AppStore";
 
 function ItemRow({ optionsArray, handleChange, placeholder, eventId }) {
   const [store, setStore] = useState({
-    name: "",
+    itemName: "",
     quantity: "",
     unit: { label: "kg", value: "kg" },
     price: "",
@@ -18,7 +18,7 @@ function ItemRow({ optionsArray, handleChange, placeholder, eventId }) {
   const [errors, setErrors] = useState({});
 
   const schema = yup.object().shape({
-    name: yup.mixed().test("is-filled", "Required.", (value) => !!value),
+    itemName: yup.mixed().test("is-filled", "Required.", (value) => !!value),
     quantity: yup.string().required("Required."),
     unit: yup.mixed().test("is-filled", "Required.", (value) => !!value),
     price: yup.string().required("Required."),
@@ -43,15 +43,25 @@ function ItemRow({ optionsArray, handleChange, placeholder, eventId }) {
       currentEventDetailRecord.eventId = eventId;
       currentEventDetailRecord.placeholder = placeholder;
       currentEventDetailRecord.expenseObj = structuredClone(store);
+      console.log("store  ", store);
+
+      currentEventDetailRecord.expenseObj.itemName =
+        currentEventDetailRecord.expenseObj.itemName.value;
+      currentEventDetailRecord.expenseObj.unit =
+        currentEventDetailRecord.expenseObj.unit.value;
+
+      console.log("currentEventDetailRecord ==>> ", currentEventDetailRecord);
       addRecord(currentEventDetailRecord);
 
       setStore({
-        name: "",
+        itemName: "",
         quantity: "",
         unit: { label: "kg", value: "kg" },
         price: "",
       });
     } catch (err) {
+      console.log("err ==>> ", err);
+
       const newErrors = err.inner.reduce((acc, err) => {
         console.log(err);
         return { ...acc, [err.path]: err.message };
@@ -65,15 +75,15 @@ function ItemRow({ optionsArray, handleChange, placeholder, eventId }) {
         <div className="basis-1/3">
           <Select
             menuPosition="fixed"
-            id="name"
+            id="itemName"
             options={options}
             placeholder={placeholder}
-            value={store.name}
-            onChange={(value) => setStore({ ...store, name: value })}
+            value={store.itemName}
+            onChange={(value) => setStore({ ...store, itemName: value })}
             required={true}
           />
-          {errors.name && (
-            <span className="text-sm text-red-600">{errors.name}</span>
+          {errors.itemName && (
+            <span className="text-sm text-red-600">{errors.itemName}</span>
           )}
         </div>
         <div className="basis-1/10">

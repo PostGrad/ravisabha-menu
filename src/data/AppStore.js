@@ -52,10 +52,11 @@ const appStore = (set) => ({
         (eve) => eve.eventId === currentEventDetailRecord.eventId
       );
       tempEventDetailsData = structuredClone(tempEventDetailsData);
+      console.log("tempEventDetailsData ==>> ", tempEventDetailsData);
 
       if (currentEventDetailRecord.placeholder === "Vegetables") {
         currentEventDetailRecord.expenseObj.id =
-          state.eventDetailsData.vegetableExpenses.length + 1;
+          tempEventDetailsData.vegetableExpenses.length + 1;
 
         tempEventDetailsData.vegetableExpenses.push(
           currentEventDetailRecord.expenseObj
@@ -63,8 +64,8 @@ const appStore = (set) => ({
       }
 
       return {
-        eventListData: state.eventDetailsData.map((eve) =>
-          eventId === currentEventDetailRecord.eventId
+        eventDetailsData: state.eventDetailsData.map((eve) =>
+          eve.eventId === currentEventDetailRecord.eventId
             ? tempEventDetailsData
             : eve
         ),

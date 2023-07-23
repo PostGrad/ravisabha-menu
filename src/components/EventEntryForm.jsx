@@ -47,25 +47,26 @@ const EventEntryForm = () => {
       .number()
       .min(0, "Received amount must be a positive number."),
   });
-  const { state } = useLocation();
-
+  const {
+    state: { stateProp },
+  } = useLocation();
   useEffect(() => {
-    if (!!state) {
+    if (!!stateProp) {
       let tempStore = {
-        id: state.id,
-        eventName: state.eventName,
-        date: parseISO(state.date),
-        place: state.place,
-        isOpen: state.isOpen,
-        menuItems: state.menuItems.map((item) => ({
+        id: stateProp.id,
+        eventName: stateProp.eventName,
+        date: parseISO(stateProp.date),
+        place: stateProp.place,
+        isOpen: stateProp.isOpen,
+        menuItems: stateProp.menuItems.map((item) => ({
           value: item,
           label: item,
         })),
-        hostName: state.hostName,
-        phoneNumber: state.phoneNumber,
-        bhojanCount: state.bhojanCount,
-        totalExpense: state.totalExpense,
-        receivedAmount: state.receivedAmount,
+        hostName: stateProp.hostName,
+        phoneNumber: stateProp.phoneNumber,
+        bhojanCount: stateProp.bhojanCount,
+        totalExpense: stateProp.totalExpense,
+        receivedAmount: stateProp.receivedAmount,
       };
       setNewEventStore(tempStore);
     } else {
@@ -82,7 +83,7 @@ const EventEntryForm = () => {
         receivedAmount: 0,
       });
     }
-  }, [state]);
+  }, [stateProp]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
