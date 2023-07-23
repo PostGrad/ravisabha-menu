@@ -52,7 +52,7 @@ const appStore = (set) => ({
         (eve) => eve.eventId === currentEventDetailRecord.eventId
       );
       tempEventDetailsData = structuredClone(tempEventDetailsData);
-      console.log("tempEventDetailsData ==>> ", tempEventDetailsData);
+      //console.log("tempEventDetailsData ==>> ", tempEventDetailsData);
 
       if (currentEventDetailRecord.placeholder === "Vegetables") {
         currentEventDetailRecord.expenseObj.id =

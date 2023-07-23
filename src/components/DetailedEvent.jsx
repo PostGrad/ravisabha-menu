@@ -30,6 +30,7 @@ const DetailedEvent = () => {
     totalExpense: "",
     receivedAmount: "",
   });
+  const [vegRowsData, setVegRowsData] = useState([]);
 
   const {
     state: { stateProp },
@@ -50,8 +51,14 @@ const DetailedEvent = () => {
   const currentEventDetails = useAppStore((state) =>
     state.eventDetailsData.find((eve) => eve.eventId === stateProp.id)
   );
+  const calculateTotalVegPrice = () => {
+    return vegRowsData.reduce(
+      (total, item) => total + parseFloat(item.price),
+      0
+    );
+  };
 
-  console.log("currentEventDetails => ", currentEventDetails);
+  //console.log("currentEventDetails => ", currentEventDetails);
 
   const schema = yup.object().shape({
     name: yup.string().required("Name is required."),
@@ -81,17 +88,8 @@ const DetailedEvent = () => {
         receivedAmount: stateProp.receivedAmount,
       };
       setNewEventStore(tempStore);
-      console.log("render count => ", currentEventDetails);
+      // console.log("render count => ", currentEventDetails);
       if (currentEventDetails?.vegetableExpenses) {
-        // let { itemId, itemName, quantity, unit, price } =
-        //   currentEventDetails.vegetableExpenses;
-        // let tempVegRowsData = {
-        //   id: itemId,
-        //   name: itemName,
-        //   quantity,
-        //   unit,
-        //   price,
-        // };
         let tempVegRowsData = currentEventDetails.vegetableExpenses.map(
           (record) => ({
             id: record.itemId,
@@ -101,7 +99,7 @@ const DetailedEvent = () => {
             price: record.price,
           })
         );
-        console.log("tempVegRowsData ==>> ", tempVegRowsData);
+        //console.log("tempVegRowsData ==>> ", tempVegRowsData);
 
         setVegRowsData([...tempVegRowsData]);
       }
@@ -140,7 +138,6 @@ const DetailedEvent = () => {
     e.preventDefault();
     console.log("Delete clicked");
   };
-  const [vegRowsData, setVegRowsData] = useState([]);
 
   const deleteTableRows = (index) => {
     const rows = [...vegRowsData];
@@ -378,8 +375,11 @@ const DetailedEvent = () => {
           <form>
             <div className="collapse bg-base-200">
               <input type="checkbox" />
-              <div className="collapse-title text-xl font-medium">
-                Add Vegetable Expenses
+              <div className="collapse-title text-xl font-medium flex justify-between">
+                <div>Add Vegetable Expenses</div>
+                <div className="badge badge-lg badge-primary">
+                  {calculateTotalVegPrice()}
+                </div>
               </div>
               <div className="collapse-content">
                 <div>
