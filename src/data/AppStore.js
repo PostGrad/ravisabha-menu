@@ -55,7 +55,7 @@ const appStore = (set) => ({
       //console.log("tempEventDetailsData ==>> ", tempEventDetailsData);
 
       if (currentEventDetailRecord.placeholder === "Vegetables") {
-        currentEventDetailRecord.expenseObj.id =
+        currentEventDetailRecord.expenseObj.itemId =
           tempEventDetailsData.vegetableExpenses.length + 1;
 
         tempEventDetailsData.vegetableExpenses.push(
@@ -68,6 +68,40 @@ const appStore = (set) => ({
           eve.eventId === currentEventDetailRecord.eventId
             ? tempEventDetailsData
             : eve
+        ),
+      };
+    });
+  },
+  deleteEventDetailRecord: ({ eventId, itemId, placeholder }) => {
+    set((state) => {
+      let tempEventDetailsData = state.eventDetailsData.find(
+        (eve) => eve.eventId === eventId
+      );
+      tempEventDetailsData = structuredClone(tempEventDetailsData);
+      console.log(
+        "tempEventDetailsData.vegetableExpenses ==>> ",
+        tempEventDetailsData.vegetableExpenses
+      );
+      console.log(
+        "eventId, itemId, placeholder ==>> ",
+        eventId,
+        itemId,
+        placeholder
+      );
+      if (placeholder === "Vegetables") {
+        let tempVegetableExpenses =
+          tempEventDetailsData.vegetableExpenses.filter(
+            (rec) => rec.itemId !== itemId
+          );
+        tempEventDetailsData.vegetableExpenses = [...tempVegetableExpenses];
+        console.log("tempVegetableExpenses ==>> ", tempVegetableExpenses);
+      }
+
+      //console.log("tempEventDetailsData ==>> ", tempEventDetailsData);
+
+      return {
+        eventDetailsData: state.eventDetailsData.map((eve) =>
+          eve.eventId === eventId ? structuredClone(tempEventDetailsData) : eve
         ),
       };
     });

@@ -1,8 +1,8 @@
 import React from "react";
 
-function TableRow({ rowsData, deleteTableRows }) {
+function TableRow({ rowsData, deleteTableRows, placeholder }) {
   return rowsData.map((data, index) => {
-    const { itemName, quantity, unit, price } = data;
+    const { itemId, itemName, quantity, unit, price } = data;
     return (
       <tr key={index}>
         <td>
@@ -23,7 +23,12 @@ function TableRow({ rowsData, deleteTableRows }) {
         <td>
           <button
             className="btn btn-error"
-            onClick={() => deleteTableRows(index)}
+            onClick={(e) => {
+              e.preventDefault();
+              console.log("itemId, placeholder   =>>> ", itemId, placeholder);
+
+              deleteTableRows({ itemId, placeholder });
+            }}
           >
             x
           </button>

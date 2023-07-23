@@ -51,6 +51,11 @@ const DetailedEvent = () => {
   const currentEventDetails = useAppStore((state) =>
     state.eventDetailsData.find((eve) => eve.eventId === stateProp.id)
   );
+
+  const deleteDetailsRow = useAppStore(
+    (state) => state.deleteEventDetailRecord
+  );
+
   const calculateTotalVegPrice = () => {
     return vegRowsData.reduce(
       (total, item) => total + parseFloat(item.price),
@@ -92,7 +97,7 @@ const DetailedEvent = () => {
       if (currentEventDetails?.vegetableExpenses) {
         let tempVegRowsData = currentEventDetails.vegetableExpenses.map(
           (record) => ({
-            id: record.itemId,
+            itemId: record.itemId,
             itemName: record.itemName,
             quantity: record.quantity,
             unit: record.unit,
@@ -139,10 +144,20 @@ const DetailedEvent = () => {
     console.log("Delete clicked");
   };
 
-  const deleteTableRows = (index) => {
-    const rows = [...vegRowsData];
-    rows.splice(index, 1);
-    setVegRowsData(rows);
+  const deleteTableRows = ({ itemId, placeholder }) => {
+    // const rows = [...vegRowsData];
+    // rows.splice(index, 1);
+    // setVegRowsData(rows);
+    console.log("Event deleteTableRows ==>> ");
+    // e.stopPropagation();
+
+    // e.preventDefault();
+
+    deleteDetailsRow({
+      eventId: currentEventDetails.eventId,
+      itemId,
+      placeholder,
+    });
   };
 
   const handleChange = (rowObj) => {
@@ -409,6 +424,7 @@ const DetailedEvent = () => {
                             <TableRow
                               rowsData={vegRowsData}
                               deleteTableRows={deleteTableRows}
+                              placeholder="Vegetables"
                             />
                           </tbody>
                         </table>
