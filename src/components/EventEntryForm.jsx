@@ -47,9 +47,8 @@ const EventEntryForm = () => {
       .number()
       .min(0, "Received amount must be a positive number."),
   });
-  const {
-    state: { stateProp },
-  } = useLocation();
+  const { state: stateFromLocation } = useLocation();
+  const stateProp = stateFromLocation?.stateProp;
   useEffect(() => {
     if (!!stateProp) {
       let tempStore = {
