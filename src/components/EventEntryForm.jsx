@@ -86,7 +86,6 @@ const EventEntryForm = () => {
   }, [stateProp]);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log();
     try {
       console.log("inside try");
       await schema.validate(NewEventStore, { abortEarly: false });
