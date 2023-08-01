@@ -46,13 +46,34 @@ const appStore = (set) => ({
     }));
   },
   eventDetailsData: eventDetailsData,
+  initEventDetails: (eventId) => {
+    set((state) => {
+      let tempEventDetailsData = {
+        eventId,
+        vegetableExpenses: [],
+      };
+
+      return {
+        eventDetailsData: [...state.eventDetailsData, tempEventDetailsData],
+      };
+    });
+  },
   updateEventDetails: (currentEventDetailRecord) => {
     set((state) => {
+      let isNewEventDetails = false;
       let tempEventDetailsData = state.eventDetailsData.find(
         (eve) => eve.eventId === currentEventDetailRecord.eventId
       );
+      console.log("tempEventDetailsData before ==>> ", tempEventDetailsData);
+
+      if (!tempEventDetailsData) {
+        isNewEventDetails = true;
+        tempEventDetailsData = {
+          eventId: currentEventDetailRecord.eventId,
+          vegetableExpenses: [],
+        };
+      }
       tempEventDetailsData = structuredClone(tempEventDetailsData);
-      //console.log("tempEventDetailsData ==>> ", tempEventDetailsData);
 
       if (currentEventDetailRecord.placeholder === "Vegetables") {
         currentEventDetailRecord.expenseObj.itemId =
@@ -62,14 +83,29 @@ const appStore = (set) => ({
           currentEventDetailRecord.expenseObj
         );
       }
+      console.log("tempEventDetailsData after ==>> ", tempEventDetailsData);
 
-      return {
-        eventDetailsData: state.eventDetailsData.map((eve) =>
-          eve.eventId === currentEventDetailRecord.eventId
-            ? tempEventDetailsData
-            : eve
-        ),
-      };
+      let tempState = state.eventDetailsData.map((eve) =>
+        eve.eventId === currentEventDetailRecord.eventId
+          ? tempEventDetailsData
+          : eve
+      );
+
+      console.log("State after update details ====>>>>> ", tempState);
+
+      if (isNewEventDetails) {
+        return {
+          eventDetailsData: [...state.eventDetailsData, tempEventDetailsData],
+        };
+      } else {
+        return {
+          eventDetailsData: state.eventDetailsData.map((eve) =>
+            eve.eventId === currentEventDetailRecord.eventId
+              ? tempEventDetailsData
+              : eve
+          ),
+        };
+      }
     });
   },
   deleteEventDetailRecord: ({ eventId, itemId, placeholder }) => {
