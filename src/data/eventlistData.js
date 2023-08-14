@@ -50,6 +50,7 @@ export const eventDetailsData = [
         quantity: 5.5,
         unit: "kg",
         price: 90,
+        userId: "Pranay Patel",
       },
     ],
   },

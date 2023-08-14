@@ -23,6 +23,11 @@ const appStore = (set) => ({
   Units: Units,
   Users: Users,
   Roles: Roles,
+  LoggedInUser: {
+    email: "pranay@patel.com",
+    userName: "Pranay Patel",
+    role: ["super"],
+  },
   addEvent: (newEvent) => {
     set((state) => ({
       eventListData: [newEvent, ...state.eventListData],
@@ -46,18 +51,6 @@ const appStore = (set) => ({
     }));
   },
   eventDetailsData: eventDetailsData,
-  initEventDetails: (eventId) => {
-    set((state) => {
-      let tempEventDetailsData = {
-        eventId,
-        vegetableExpenses: [],
-      };
-
-      return {
-        eventDetailsData: [...state.eventDetailsData, tempEventDetailsData],
-      };
-    });
-  },
   updateEventDetails: (currentEventDetailRecord) => {
     set((state) => {
       let isNewEventDetails = false;

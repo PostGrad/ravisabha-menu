@@ -5,12 +5,15 @@ import * as yup from "yup";
 import { Units } from "../../data/Units";
 import useAppStore from "../../data/AppStore";
 
-function ItemRow({ optionsArray, handleChange, placeholder, eventId }) {
+function ItemRow({ optionsArray, placeholder, eventId }) {
+  const LoggedInUser = useAppStore((state) => state.LoggedInUser);
+
   const [store, setStore] = useState({
     itemName: "",
     quantity: "",
     unit: { label: "kg", value: "kg" },
     price: "",
+    userId: { label: LoggedInUser.userName, value: LoggedInUser.userName },
   });
 
   const addRecord = useAppStore((state) => state.updateEventDetails);
@@ -22,6 +25,7 @@ function ItemRow({ optionsArray, handleChange, placeholder, eventId }) {
     quantity: yup.string().required("Required."),
     unit: yup.mixed().test("is-filled", "Required.", (value) => !!value),
     price: yup.string().required("Required."),
+    userId: yup.mixed().test("is-filled", "Required.", (value) => !!value),
   });
   const options = optionsArray.map((item) => ({
     value: item,
@@ -31,6 +35,13 @@ function ItemRow({ optionsArray, handleChange, placeholder, eventId }) {
     value: item,
     label: item,
   }));
+
+  const Users = useAppStore((state) => state.Users);
+  const usersOptions = Users.map((user) => ({
+    value: user.userName,
+    label: user.userName,
+  }));
+
   const handleAdd = async (e) => {
     e.preventDefault();
     try {
@@ -49,6 +60,8 @@ function ItemRow({ optionsArray, handleChange, placeholder, eventId }) {
         currentEventDetailRecord.expenseObj.itemName.value;
       currentEventDetailRecord.expenseObj.unit =
         currentEventDetailRecord.expenseObj.unit.value;
+      currentEventDetailRecord.expenseObj.userId =
+        currentEventDetailRecord.expenseObj.userId.value;
 
       console.log("currentEventDetailRecord ==>> ", currentEventDetailRecord);
       addRecord(currentEventDetailRecord);
@@ -58,6 +71,7 @@ function ItemRow({ optionsArray, handleChange, placeholder, eventId }) {
         quantity: "",
         unit: { label: "kg", value: "kg" },
         price: "",
+        userId: { label: LoggedInUser.userName, value: LoggedInUser.userName },
       });
     } catch (err) {
       console.log("err ==>> ", err);
@@ -72,7 +86,7 @@ function ItemRow({ optionsArray, handleChange, placeholder, eventId }) {
   return (
     <>
       <div className="flex flex-row gap-4 items-center flex-wrap md:flex-nowrap">
-        <div className="basis-1/3">
+        <div className="basis-1/6">
           <Select
             menuPosition="fixed"
             id="itemName"
@@ -86,7 +100,7 @@ function ItemRow({ optionsArray, handleChange, placeholder, eventId }) {
             <span className="text-sm text-red-600">{errors.itemName}</span>
           )}
         </div>
-        <div className="basis-1/10">
+        <div className="basis-1/6">
           <input
             className="input input-bordered w-full max-w-xs"
             id="quantity"
@@ -105,10 +119,10 @@ function ItemRow({ optionsArray, handleChange, placeholder, eventId }) {
           )}
         </div>
 
-        <div className="basis-1/10">
+        <div className="basis-1/6">
           <Select
             menuPosition="fixed"
-            id="Options"
+            id="unit"
             options={unitOptions}
             placeholder="Unit"
             value={store.unit}
@@ -119,7 +133,7 @@ function ItemRow({ optionsArray, handleChange, placeholder, eventId }) {
             <span className="text-sm text-red-600">{errors.unit}</span>
           )}
         </div>
-        <div className="basis-1/5">
+        <div className="basis-1/6">
           <input
             className="input input-bordered w-full max-w-xs"
             id="price"
@@ -137,7 +151,21 @@ function ItemRow({ optionsArray, handleChange, placeholder, eventId }) {
             <span className="text-sm text-red-600">{errors.price}</span>
           )}
         </div>
-        <div className="basis-1/9">
+        <div className="basis-1/6">
+          <Select
+            menuPosition="fixed"
+            id="userId"
+            options={usersOptions}
+            placeholder="User"
+            value={store.userId}
+            onChange={(value) => setStore({ ...store, userId: value })}
+            required={true}
+          />
+          {errors.userId && (
+            <span className="text-sm text-red-600">{errors.userId}</span>
+          )}
+        </div>
+        <div className="basis-1/6">
           <button className="btn btn-accent" onClick={handleAdd}>
             Add
           </button>

@@ -5,7 +5,6 @@ import { registerLocale } from "react-datepicker";
 import { enIN } from "date-fns/locale";
 import { parseISO } from "date-fns";
 import Select from "react-select";
-import ConfirmDialog from "./confirmModal/Confirm";
 import * as yup from "yup";
 import {
   Vegetables,
@@ -37,8 +36,6 @@ const DetailedEvent = () => {
   } = useLocation();
 
   const [errors, setErrors] = useState({});
-  const [confirmOpen, setConfirmOpen] = useState(false);
-  const navigate = useNavigate();
   const locale = registerLocale("enIN", enIN);
 
   const menuItemsOptions = useAppStore((state) => state.MenuItems).map(
@@ -93,7 +90,7 @@ const DetailedEvent = () => {
         receivedAmount: stateProp.receivedAmount,
       };
       setNewEventStore(tempStore);
-      // console.log("render count => ", currentEventDetails);
+      console.log("render count => ", currentEventDetails);
       if (currentEventDetails?.vegetableExpenses) {
         let tempVegRowsData = currentEventDetails.vegetableExpenses.map(
           (record) => ({
@@ -102,6 +99,7 @@ const DetailedEvent = () => {
             quantity: record.quantity,
             unit: record.unit,
             price: record.price,
+            userId: record.userId,
           })
         );
         //console.log("tempVegRowsData ==>> ", tempVegRowsData);
@@ -122,46 +120,15 @@ const DetailedEvent = () => {
       });
     }
   }, [stateProp, currentEventDetails]);
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      console.log("inside try");
-      await schema.validate(NewEventStore, { abortEarly: false });
-      console.log("after validate call");
-      setErrors({});
-      navigate("/");
-    } catch (err) {
-      const newErrors = err.inner.reduce((acc, err) => {
-        console.log(err);
-        return { ...acc, [err.path]: err.message };
-      }, {});
-      setErrors(newErrors);
-    }
-    console.log(NewEventStore);
-  };
-  const handleDelete = (e) => {
-    e.preventDefault();
-    console.log("Delete clicked");
-  };
 
   const deleteTableRows = ({ itemId, placeholder }) => {
-    // const rows = [...vegRowsData];
-    // rows.splice(index, 1);
-    // setVegRowsData(rows);
     console.log("Event deleteTableRows ==>> ");
-    // e.stopPropagation();
-
-    // e.preventDefault();
 
     deleteDetailsRow({
       eventId: currentEventDetails.eventId,
       itemId,
       placeholder,
     });
-  };
-
-  const handleChange = (rowObj) => {
-    setVegRowsData([...vegRowsData, rowObj]);
   };
 
   return (
@@ -397,16 +364,15 @@ const DetailedEvent = () => {
                 </div>
               </div>
               <div className="collapse-content">
-                <div>
+                <div className="z-100">
                   <ItemRow
                     optionsArray={Vegetables}
-                    handleChange={handleChange}
                     placeholder="Vegetables"
                     eventId={NewEventStore.id}
                   />
                 </div>
                 {vegRowsData.length > 0 && (
-                  <div className="flex justify-center">
+                  <div className="flex justify-center z-0">
                     <div className="row">
                       <div className="col-sm-8 ">
                         <table className="table">
@@ -417,6 +383,7 @@ const DetailedEvent = () => {
                               <th>Quantity</th>
                               <th>Unit</th>
                               <th>Price</th>
+                              <th>Bought By</th>
                               <th></th>
                             </tr>
                           </thead>
@@ -438,7 +405,7 @@ const DetailedEvent = () => {
           </form>
         </div>
       </div>
-      <p>{JSON.stringify(NewEventStore)}</p>
+      {/* <p>{JSON.stringify(NewEventStore)}</p> */}
     </div>
   );
 };

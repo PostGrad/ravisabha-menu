@@ -2,7 +2,7 @@ import React from "react";
 
 function TableRow({ rowsData, deleteTableRows, placeholder }) {
   return rowsData.map((data, index) => {
-    const { itemId, itemName, quantity, unit, price } = data;
+    const { itemId, itemName, quantity, unit, price, userId } = data;
     return (
       <tr key={index}>
         <td>
@@ -19,6 +19,9 @@ function TableRow({ rowsData, deleteTableRows, placeholder }) {
         </td>
         <td>
           <label>{price}</label>
+        </td>
+        <td>
+          <label>{userId}</label>
         </td>
         <td>
           <button
