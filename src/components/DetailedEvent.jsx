@@ -137,7 +137,7 @@ const DetailedEvent = () => {
       <div className="grid grid-cols-10 w-full">
         <div className="" />
         <div className="col-span-8">
-          <div className="collapse bg-base-200">
+          <div className="collapse collapse-arrow bg-base-200">
             <input type="checkbox" />
             <div className="collapse-title text-xl font-medium">
               Main Details
@@ -355,7 +355,7 @@ const DetailedEvent = () => {
             </div>
           </div>
           <form>
-            <div className="collapse bg-base-200">
+            <div className="collapse collapse-arrow bg-base-200">
               <input type="checkbox" />
               <div className="collapse-title text-xl font-medium flex justify-between">
                 <div>Add Vegetable Expenses</div>
