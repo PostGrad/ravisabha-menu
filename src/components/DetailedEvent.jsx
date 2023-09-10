@@ -6,12 +6,6 @@ import { enIN } from "date-fns/locale";
 import { parseISO } from "date-fns";
 import Select from "react-select";
 import * as yup from "yup";
-import {
-  Vegetables,
-  Grocery,
-  DairyItems,
-  Beverages,
-} from "../data/ingrediantsData";
 import "react-datepicker/dist/react-datepicker.css";
 import TableRow from "./itemList/TableRow";
 import ItemRow from "./itemList/ItemRow";
@@ -30,6 +24,11 @@ const DetailedEvent = () => {
     receivedAmount: "",
   });
   const [vegRowsData, setVegRowsData] = useState([]);
+  const [groceryRowsData, setGroceryRowsData] = useState([]);
+  const [beveragesRowsData, setBeveragesRowsData] = useState([]);
+  const [dairyItemsRowsData, setDairyItemsRowsData] = useState([]);
+  const [disposableItemsRowsData, setDisposableItemsRowsData] = useState([]);
+  const [otherExpensesRowsData, setOtherExpensesRowsData] = useState([]);
 
   const {
     state: { stateProp },
@@ -45,6 +44,18 @@ const DetailedEvent = () => {
     })
   );
 
+  const Vegetables = useAppStore((state) => state.Vegetables);
+
+  const Grocery = useAppStore((state) => state.Grocery);
+
+  const Beverages = useAppStore((state) => state.Beverages);
+
+  const DairyItems = useAppStore((state) => state.DairyItems);
+
+  const DisposableItems = useAppStore((state) => state.DisposableItems);
+
+  const OtherExpenses = useAppStore((state) => state.OtherExpenses);
+
   const currentEventDetails = useAppStore((state) =>
     state.eventDetailsData.find((eve) => eve.eventId === stateProp.id)
   );
@@ -55,6 +66,41 @@ const DetailedEvent = () => {
 
   const calculateTotalVegPrice = () => {
     return vegRowsData.reduce(
+      (total, item) => total + parseFloat(item.price),
+      0
+    );
+  };
+
+  const calculateTotalGroceryPrice = () => {
+    return groceryRowsData.reduce(
+      (total, item) => total + parseFloat(item.price),
+      0
+    );
+  };
+
+  const calculateTotalBeveragesPrice = () => {
+    return beveragesRowsData.reduce(
+      (total, item) => total + parseFloat(item.price),
+      0
+    );
+  };
+
+  const calculateTotalDairyItemsPrice = () => {
+    return dairyItemsRowsData.reduce(
+      (total, item) => total + parseFloat(item.price),
+      0
+    );
+  };
+
+  const calculateTotalDisposableItemsPrice = () => {
+    return disposableItemsRowsData.reduce(
+      (total, item) => total + parseFloat(item.price),
+      0
+    );
+  };
+
+  const calculateOtherExpensesPrice = () => {
+    return otherExpensesRowsData.reduce(
       (total, item) => total + parseFloat(item.price),
       0
     );
@@ -106,6 +152,75 @@ const DetailedEvent = () => {
 
         setVegRowsData([...tempVegRowsData]);
       }
+      if (currentEventDetails?.groceryExpenses) {
+        let tempGroceryRowsData = currentEventDetails.groceryExpenses.map(
+          (record) => ({
+            itemId: record.itemId,
+            itemName: record.itemName,
+            quantity: record.quantity,
+            unit: record.unit,
+            price: record.price,
+            userId: record.userId,
+          })
+        );
+        //console.log("tempVegRowsData ==>> ", tempVegRowsData);
+        setGroceryRowsData([...tempGroceryRowsData]);
+      }
+      if (currentEventDetails?.beveragesExpenses) {
+        let tempBeveragesRowsData = currentEventDetails.beveragesExpenses.map(
+          (record) => ({
+            itemId: record.itemId,
+            itemName: record.itemName,
+            quantity: record.quantity,
+            unit: record.unit,
+            price: record.price,
+            userId: record.userId,
+          })
+        );
+
+        setBeveragesRowsData([...tempBeveragesRowsData]);
+      }
+      if (currentEventDetails?.dairyItemsExpenses) {
+        let tempDairyItemsRowsData = currentEventDetails.dairyItemsExpenses.map(
+          (record) => ({
+            itemId: record.itemId,
+            itemName: record.itemName,
+            quantity: record.quantity,
+            unit: record.unit,
+            price: record.price,
+            userId: record.userId,
+          })
+        );
+
+        setDairyItemsRowsData([...tempDairyItemsRowsData]);
+      }
+      if (currentEventDetails?.disposableItemsExpenses) {
+        let tempDisposableItemsRowsData =
+          currentEventDetails.disposableItemsExpenses.map((record) => ({
+            itemId: record.itemId,
+            itemName: record.itemName,
+            quantity: record.quantity,
+            unit: record.unit,
+            price: record.price,
+            userId: record.userId,
+          }));
+
+        setDisposableItemsRowsData([...tempDisposableItemsRowsData]);
+      }
+      if (currentEventDetails?.otherExpenses) {
+        let tempOtherExpensesRowsData = currentEventDetails.otherExpenses.map(
+          (record) => ({
+            itemId: record.itemId,
+            itemName: record.itemName,
+            quantity: record.quantity,
+            unit: record.unit,
+            price: record.price,
+            userId: record.userId,
+          })
+        );
+
+        setOtherExpensesRowsData([...tempOtherExpensesRowsData]);
+      }
     } else {
       setNewEventStore({
         name: "",
@@ -138,11 +253,11 @@ const DetailedEvent = () => {
         <div className="" />
         <div className="col-span-8">
           <div className="collapse collapse-arrow bg-base-200">
-            <input type="checkbox" />
-            <div className="collapse-title text-xl font-medium">
+            <input type="checkbox" className="peer" />
+            <div className="collapse-title text-xl font-medium peer-checked:bg-red-50">
               Main Details
             </div>
-            <div className="collapse-content">
+            <div className="collapse-content peer-checked:bg-red-50">
               <div className="grid gap-6 mb-6 md:grid-cols-2">
                 <div>
                   <div>
@@ -383,7 +498,7 @@ const DetailedEvent = () => {
                               <th>Quantity</th>
                               <th>Unit</th>
                               <th>Price</th>
-                              <th>Bought By</th>
+                              <th>Paid By</th>
                               <th></th>
                             </tr>
                           </thead>
@@ -392,6 +507,252 @@ const DetailedEvent = () => {
                               rowsData={vegRowsData}
                               deleteTableRows={deleteTableRows}
                               placeholder="Vegetables"
+                            />
+                          </tbody>
+                        </table>
+                      </div>
+                      <div className="col-sm-4"></div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </form>
+          <form>
+            <div className="collapse collapse-arrow bg-base-200">
+              <input type="checkbox" />
+              <div className="collapse-title text-xl font-medium flex justify-between">
+                <div>Add Grocery Expenses</div>
+                <div className="badge badge-lg badge-primary">
+                  {calculateTotalGroceryPrice()}
+                </div>
+              </div>
+              <div className="collapse-content">
+                <div className="z-100">
+                  <ItemRow
+                    optionsArray={Grocery}
+                    placeholder="Grocery"
+                    eventId={NewEventStore.id}
+                  />
+                </div>
+                {groceryRowsData.length > 0 && (
+                  <div className="flex justify-center z-0">
+                    <div className="row">
+                      <div className="col-sm-8 ">
+                        <table className="table">
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th>Grocery</th>
+                              <th>Quantity</th>
+                              <th>Unit</th>
+                              <th>Price</th>
+                              <th>Paid By</th>
+                              <th></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <TableRow
+                              rowsData={groceryRowsData}
+                              deleteTableRows={deleteTableRows}
+                              placeholder="Grocery"
+                            />
+                          </tbody>
+                        </table>
+                      </div>
+                      <div className="col-sm-4"></div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </form>
+          <form>
+            <div className="collapse collapse-arrow bg-base-200">
+              <input type="checkbox" />
+              <div className="collapse-title text-xl font-medium flex justify-between">
+                <div>Add Beverages Expenses</div>
+                <div className="badge badge-lg badge-primary">
+                  {calculateTotalBeveragesPrice()}
+                </div>
+              </div>
+              <div className="collapse-content">
+                <div className="z-100">
+                  <ItemRow
+                    optionsArray={Beverages}
+                    placeholder="Beverages"
+                    eventId={NewEventStore.id}
+                  />
+                </div>
+                {beveragesRowsData.length > 0 && (
+                  <div className="flex justify-center z-0">
+                    <div className="row">
+                      <div className="col-sm-8 ">
+                        <table className="table">
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th>Beverages</th>
+                              <th>Quantity</th>
+                              <th>Unit</th>
+                              <th>Price</th>
+                              <th>Paid By</th>
+                              <th></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <TableRow
+                              rowsData={beveragesRowsData}
+                              deleteTableRows={deleteTableRows}
+                              placeholder="Beverages"
+                            />
+                          </tbody>
+                        </table>
+                      </div>
+                      <div className="col-sm-4"></div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </form>
+          <form>
+            <div className="collapse collapse-arrow bg-base-200">
+              <input type="checkbox" />
+              <div className="collapse-title text-xl font-medium flex justify-between">
+                <div>Add Dairy Items Expenses</div>
+                <div className="badge badge-lg badge-primary">
+                  {calculateTotalDairyItemsPrice()}
+                </div>
+              </div>
+              <div className="collapse-content">
+                <div className="z-100">
+                  <ItemRow
+                    optionsArray={DairyItems}
+                    placeholder="Dairy Items"
+                    eventId={NewEventStore.id}
+                  />
+                </div>
+                {dairyItemsRowsData.length > 0 && (
+                  <div className="flex justify-center z-0">
+                    <div className="row">
+                      <div className="col-sm-8 ">
+                        <table className="table">
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th>Dairy Item</th>
+                              <th>Quantity</th>
+                              <th>Unit</th>
+                              <th>Price</th>
+                              <th>Paid By</th>
+                              <th></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <TableRow
+                              rowsData={dairyItemsRowsData}
+                              deleteTableRows={deleteTableRows}
+                              placeholder="Dairy Items"
+                            />
+                          </tbody>
+                        </table>
+                      </div>
+                      <div className="col-sm-4"></div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </form>
+          <form>
+            <div className="collapse collapse-arrow bg-base-200">
+              <input type="checkbox" />
+              <div className="collapse-title text-xl font-medium flex justify-between">
+                <div>Add Disposable Items Expenses</div>
+                <div className="badge badge-lg badge-primary">
+                  {calculateTotalDisposableItemsPrice()}
+                </div>
+              </div>
+              <div className="collapse-content">
+                <div className="z-100">
+                  <ItemRow
+                    optionsArray={DisposableItems}
+                    placeholder="Disposable Items"
+                    eventId={NewEventStore.id}
+                  />
+                </div>
+                {disposableItemsRowsData.length > 0 && (
+                  <div className="flex justify-center z-0">
+                    <div className="row">
+                      <div className="col-sm-8 ">
+                        <table className="table">
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th>Disposable Item</th>
+                              <th>Quantity</th>
+                              <th>Unit</th>
+                              <th>Price</th>
+                              <th>Paid By</th>
+                              <th></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <TableRow
+                              rowsData={disposableItemsRowsData}
+                              deleteTableRows={deleteTableRows}
+                              placeholder="Disposable Items"
+                            />
+                          </tbody>
+                        </table>
+                      </div>
+                      <div className="col-sm-4"></div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </form>
+          <form>
+            <div className="collapse collapse-arrow bg-base-200">
+              <input type="checkbox" />
+              <div className="collapse-title text-xl font-medium flex justify-between">
+                <div>Add Other Expenses</div>
+                <div className="badge badge-lg badge-primary">
+                  {calculateOtherExpensesPrice()}
+                </div>
+              </div>
+              <div className="collapse-content">
+                <div className="z-100">
+                  <ItemRow
+                    optionsArray={OtherExpenses}
+                    placeholder="Other Expenses"
+                    eventId={NewEventStore.id}
+                    specialFields={{ quantityDisabled: true, unit: "NA" }}
+                  />
+                </div>
+                {otherExpensesRowsData.length > 0 && (
+                  <div className="flex justify-center z-0">
+                    <div className="row">
+                      <div className="col-sm-8 ">
+                        <table className="table">
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th>Other Expenses</th>
+                              <th>Quantity</th>
+                              <th>Unit</th>
+                              <th>Price</th>
+                              <th>Paid By</th>
+                              <th></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <TableRow
+                              rowsData={otherExpensesRowsData}
+                              deleteTableRows={deleteTableRows}
+                              placeholder="Disposable Items"
                             />
                           </tbody>
                         </table>

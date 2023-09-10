@@ -53,5 +53,46 @@ export const eventDetailsData = [
         userId: "Pranay Patel",
       },
     ],
+    groceryExpenses: [
+      {
+        itemId: 1,
+        itemName: "Chokha",
+        quantity: 5.5,
+        unit: "kg",
+        price: 90,
+        userId: "Pranay Patel",
+      },
+    ],
+    beveragesExpenses: [
+      {
+        itemId: 1,
+        itemName: "Sprite",
+        quantity: 10,
+        unit: "bottle",
+        price: 900,
+        userId: "Pranay Patel",
+      },
+    ],
+    dairyItemsExpenses: [
+      {
+        itemId: 1,
+        itemName: "Milk",
+        quantity: 10,
+        unit: "ltr",
+        price: 600,
+        userId: "Pranay Patel",
+      },
+    ],
+    disposableItemsExpenses: [],
+    otherExpenses: [
+      {
+        itemId: 1,
+        itemName: "Rasoya Maharaj",
+        quantity: 1,
+        unit: "NA",
+        price: 1000,
+        userId: "Shailesh Kevadiya",
+      },
+    ],
   },
 ];

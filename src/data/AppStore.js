@@ -7,6 +7,7 @@ import {
   DairyItems,
   DisposableItems,
   Grocery,
+  OtherExpenses,
   Vegetables,
 } from "./ingrediantsData";
 import { Units } from "./Units";
@@ -20,6 +21,7 @@ const appStore = (set) => ({
   Beverages: Beverages,
   DairyItems: DairyItems,
   DisposableItems: DisposableItems,
+  OtherExpenses: OtherExpenses,
   Units: Units,
   Users: Users,
   Roles: Roles,
@@ -64,6 +66,11 @@ const appStore = (set) => ({
         tempEventDetailsData = {
           eventId: currentEventDetailRecord.eventId,
           vegetableExpenses: [],
+          groceryExpenses: [],
+          beveragesExpenses: [],
+          dairyItemsExpenses: [],
+          disposableItemsExpenses: [],
+          otherExpenses: [],
         };
       }
       tempEventDetailsData = structuredClone(tempEventDetailsData);
@@ -76,6 +83,47 @@ const appStore = (set) => ({
           currentEventDetailRecord.expenseObj
         );
       }
+      if (currentEventDetailRecord.placeholder === "Grocery") {
+        currentEventDetailRecord.expenseObj.itemId =
+          tempEventDetailsData.groceryExpenses.length + 1;
+
+        tempEventDetailsData.groceryExpenses.push(
+          currentEventDetailRecord.expenseObj
+        );
+      }
+      if (currentEventDetailRecord.placeholder === "Beverages") {
+        currentEventDetailRecord.expenseObj.itemId =
+          tempEventDetailsData.beveragesExpenses.length + 1;
+
+        tempEventDetailsData.beveragesExpenses.push(
+          currentEventDetailRecord.expenseObj
+        );
+      }
+      if (currentEventDetailRecord.placeholder === "Dairy Items") {
+        currentEventDetailRecord.expenseObj.itemId =
+          tempEventDetailsData.dairyItemsExpenses.length + 1;
+
+        tempEventDetailsData.dairyItemsExpenses.push(
+          currentEventDetailRecord.expenseObj
+        );
+      }
+      if (currentEventDetailRecord.placeholder === "Disposable Items") {
+        currentEventDetailRecord.expenseObj.itemId =
+          tempEventDetailsData.disposableItemsExpenses.length + 1;
+
+        tempEventDetailsData.disposableItemsExpenses.push(
+          currentEventDetailRecord.expenseObj
+        );
+      }
+      if (currentEventDetailRecord.placeholder === "Other Expenses") {
+        currentEventDetailRecord.expenseObj.itemId =
+          tempEventDetailsData.otherExpenses.length + 1;
+
+        tempEventDetailsData.otherExpenses.push(
+          currentEventDetailRecord.expenseObj
+        );
+      }
+
       console.log("tempEventDetailsData after ==>> ", tempEventDetailsData);
 
       let tempState = state.eventDetailsData.map((eve) =>
@@ -126,6 +174,45 @@ const appStore = (set) => ({
         console.log("tempVegetableExpenses ==>> ", tempVegetableExpenses);
       }
 
+      if (placeholder === "Grocery") {
+        let tempGroceryExpenses = tempEventDetailsData.groceryExpenses.filter(
+          (rec) => rec.itemId !== itemId
+        );
+        tempEventDetailsData.groceryExpenses = [...tempGroceryExpenses];
+        console.log("tempGroceryExpenses ==>> ", tempGroceryExpenses);
+      }
+
+      if (placeholder === "Beverages") {
+        let tempExpenses = tempEventDetailsData.beveragesExpenses.filter(
+          (rec) => rec.itemId !== itemId
+        );
+        tempEventDetailsData.beveragesExpenses = [...tempExpenses];
+        console.log("tempBeveragesExpenses ==>> ", tempExpenses);
+      }
+
+      if (placeholder === "Dairy Items") {
+        let tempExpenses = tempEventDetailsData.dairyItemsExpenses.filter(
+          (rec) => rec.itemId !== itemId
+        );
+        tempEventDetailsData.dairyItemsExpenses = [...tempExpenses];
+        console.log("tempDairyItemsExpenses ==>> ", tempExpenses);
+      }
+
+      if (placeholder === "Disposable Items") {
+        let tempExpenses = tempEventDetailsData.disposableItemsExpenses.filter(
+          (rec) => rec.itemId !== itemId
+        );
+        tempEventDetailsData.disposableItemsExpenses = [...tempExpenses];
+        console.log("tempDisposableItemsExpenses ==>> ", tempExpenses);
+      }
+
+      if (placeholder === "Other Expenses") {
+        let tempExpenses = tempEventDetailsData.otherExpenses.filter(
+          (rec) => rec.itemId !== itemId
+        );
+        tempEventDetailsData.otherExpenses = [...tempExpenses];
+        console.log("tempotherExpenses ==>> ", tempExpenses);
+      }
       //console.log("tempEventDetailsData ==>> ", tempEventDetailsData);
 
       return {

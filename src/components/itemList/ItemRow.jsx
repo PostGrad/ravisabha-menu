@@ -5,7 +5,8 @@ import * as yup from "yup";
 import { Units } from "../../data/Units";
 import useAppStore from "../../data/AppStore";
 
-function ItemRow({ optionsArray, placeholder, eventId }) {
+function ItemRow({ optionsArray, placeholder, eventId, specialFields }) {
+  console.log("special values ===>>>> ", specialFields);
   const LoggedInUser = useAppStore((state) => state.LoggedInUser);
 
   const [store, setStore] = useState({
@@ -22,7 +23,7 @@ function ItemRow({ optionsArray, placeholder, eventId }) {
 
   const schema = yup.object().shape({
     itemName: yup.mixed().test("is-filled", "Required.", (value) => !!value),
-    quantity: yup.string().required("Required."),
+    quantity: yup.string().nullable().notRequired(),
     unit: yup.mixed().test("is-filled", "Required.", (value) => !!value),
     price: yup.string().required("Required."),
     userId: yup.mixed().test("is-filled", "Required.", (value) => !!value),
@@ -107,6 +108,7 @@ function ItemRow({ optionsArray, placeholder, eventId }) {
             type="text"
             placeholder="Quantity"
             value={store.quantity}
+            disabled={specialFields?.quantityDisabled}
             onChange={(e) =>
               setStore({
                 ...store,

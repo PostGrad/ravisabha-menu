@@ -87,3 +87,12 @@ export const DisposableItems = [
   "Plastic Spoon",
   "Plastic Fork",
 ];
+
+export const OtherExpenses = [
+  "Rasoya Maharaj",
+  "Vasan Safai",
+  "Cooking Gas",
+  "Masala General",
+  "Bal Yuva",
+  "General Kharch",
+];

@@ -1,1 +1,11 @@
-export const Units = ["kg", "gm", "ltr", "ml"];
+export const Units = [
+  "kg",
+  "ltr",
+  "gm",
+  "ml",
+  "bottle",
+  "box",
+  "packet",
+  "tin",
+  "NA",
+];
