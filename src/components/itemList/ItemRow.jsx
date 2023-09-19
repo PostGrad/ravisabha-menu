@@ -6,18 +6,22 @@ import { Units } from "../../data/Units";
 import useAppStore from "../../data/AppStore";
 
 function ItemRow({ optionsArray, placeholder, eventId, specialFields }) {
-  console.log("special values ===>>>> ", specialFields);
+  //console.log("special values ===>>>> ", specialFields);
   const LoggedInUser = useAppStore((state) => state.LoggedInUser);
 
   const [store, setStore] = useState({
     itemName: "",
-    quantity: "",
-    unit: { label: "kg", value: "kg" },
+    quantity: specialFields?.quantity ? specialFields?.quantity : "",
+    unit: {
+      label: specialFields?.unit ? specialFields?.unit : "kg",
+      value: specialFields?.unit ? specialFields?.unit : "kg",
+    },
     price: "",
     userId: { label: LoggedInUser.userName, value: LoggedInUser.userName },
   });
 
   const addRecord = useAppStore((state) => state.updateEventDetails);
+  const getEventListData = useAppStore((state) => state.getEventListData);
 
   const [errors, setErrors] = useState({});
 
@@ -66,11 +70,15 @@ function ItemRow({ optionsArray, placeholder, eventId, specialFields }) {
 
       console.log("currentEventDetailRecord ==>> ", currentEventDetailRecord);
       addRecord(currentEventDetailRecord);
+      getEventListData();
 
       setStore({
         itemName: "",
-        quantity: "",
-        unit: { label: "kg", value: "kg" },
+        quantity: specialFields?.quantity ? specialFields?.quantity : "",
+        unit: {
+          label: specialFields?.unit ? specialFields?.unit : "kg",
+          value: specialFields?.unit ? specialFields?.unit : "kg",
+        },
         price: "",
         userId: { label: LoggedInUser.userName, value: LoggedInUser.userName },
       });

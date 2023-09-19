@@ -13,8 +13,86 @@ import {
 import { Units } from "./Units";
 import { Roles, Users } from "./userData";
 
+const calculateTotal = (itemArray) => {
+  return itemArray.reduce((total, item) => {
+    // console.log("total and curent price ==>> ", total, item.price);
+    return total + parseFloat(item?.price ? item?.price : item);
+  }, 0);
+};
+
+const calculateEventTotalExpense = function (
+  eventDetailsData,
+  eventId,
+  currentEvent
+) {
+  let tempEventDetailsData = eventDetailsData.find(
+    (eve) => eve.eventId === eventId
+  );
+  tempEventDetailsData = structuredClone(tempEventDetailsData);
+
+  let tempTotalExpense = [];
+  if (tempEventDetailsData?.vegetableExpenses.length > 0) {
+    let tempExpenses = calculateTotal(tempEventDetailsData?.vegetableExpenses);
+    // console.log("tempVegetableExpenses ==>> ", tempExpenses);
+    tempTotalExpense.push(tempExpenses);
+  }
+
+  if (tempEventDetailsData?.groceryExpenses.length > 0) {
+    let tempExpenses = calculateTotal(tempEventDetailsData?.groceryExpenses);
+    // console.log("tempGroceryExpenses ==>> ", tempExpenses);
+    tempTotalExpense.push(tempExpenses);
+  }
+
+  if (tempEventDetailsData?.beveragesExpenses.length > 0) {
+    let tempExpenses = calculateTotal(tempEventDetailsData?.beveragesExpenses);
+    // console.log("tempBeveragesExpenses ==>> ", tempExpenses);
+    tempTotalExpense.push(tempExpenses);
+  }
+
+  if (tempEventDetailsData?.dairyItemsExpenses.length > 0) {
+    let tempExpenses = calculateTotal(tempEventDetailsData?.dairyItemsExpenses);
+    // console.log("tempDairyItemsExpenses ==>> ", tempExpenses);
+    tempTotalExpense.push(tempExpenses);
+  }
+
+  if (tempEventDetailsData?.disposableItemsExpenses.length > 0) {
+    let tempExpenses = calculateTotal(
+      tempEventDetailsData?.disposableItemsExpenses
+    );
+    // console.log("tempDisposableItemsExpenses ==>> ", tempExpenses);
+    tempTotalExpense.push(tempExpenses);
+  }
+
+  if (tempEventDetailsData?.otherExpenses.length > 0) {
+    let tempExpenses = calculateTotal(tempEventDetailsData?.otherExpenses);
+    // console.log("tempotherExpenses ==>> ", tempExpenses);
+    tempTotalExpense.push(tempExpenses);
+  }
+  currentEvent.totalExpense = calculateTotal(tempTotalExpense);
+  // console.log("totalExpense ==>> ", currentEvent.totalExpense);
+
+  return JSON.parse(JSON.stringify(currentEvent));
+};
+
 const appStore = (set) => ({
   eventListData: eventListData,
+  getEventListData: function () {
+    set((state) => {
+      let events = JSON.parse(JSON.stringify(state.eventListData));
+      let eventDetails = JSON.parse(JSON.stringify(state.eventDetailsData));
+      let eventIds = events.map((eve) => eve.id);
+      let updatedEvents = eventIds.map((eve, index) => {
+        return calculateEventTotalExpense(eventDetails, eve, events[index]);
+      });
+      // console.log(
+      //   "updatedEvents after addinf total expense: ==>> ",
+      //   updatedEvents
+      // );
+      return {
+        eventListData: [...updatedEvents],
+      };
+    });
+  },
   MenuItems: MenuItems,
   Vegetables: Vegetables,
   Grocery: Grocery,
@@ -53,7 +131,7 @@ const appStore = (set) => ({
     }));
   },
   eventDetailsData: eventDetailsData,
-  updateEventDetails: (currentEventDetailRecord) => {
+  updateEventDetails: function (currentEventDetailRecord) {
     set((state) => {
       let isNewEventDetails = false;
       let tempEventDetailsData = state.eventDetailsData.find(

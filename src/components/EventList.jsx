@@ -1,12 +1,44 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAppStore from "../data/AppStore";
 import { Button } from "react-daisyui";
 
 function EventList() {
-  const navigate = useNavigate();
+  const [events, setEvents] = useState([]);
 
-  const events = useAppStore((state) => state.eventListData);
+  const navigate = useNavigate();
+  const getEventListData = useAppStore((state) => state.getEventListData);
+  const eventListData = useAppStore((state) => state.eventListData);
+
+  // const calculateEventTotalExpense = useAppStore(
+  //   (state) => state.calculateEventTotalExpense
+  // );
+
+  // let eventIds = events.map((eve) => eve.id);
+  // console.log("eventIds ====>>>>>>> ", eventIds);
+
+  // for (let index = 0; index < eventIds.length; index++) {
+  //   events[eventIds[index]] = calculateEventTotalExpense(
+  //     events[eventIds[index]].id
+  //   );
+  // }
+
+  useEffect(() => {
+    // let eventIds = eventList.map((eve) => eve.id);
+    // console.log("eventIds ====>>>>>>> ", eventIds);
+
+    // for (let index = 0; index < eventIds.length; index++) {
+    //   eventList[eventIds[index]] = calculateEventTotalExpense(
+    //     eventList[eventIds[index]].id
+    //   );
+    // }
+    const eventList = getEventListData();
+    // console.log("eventList ====>>>>>>> ", eventListData);
+
+    setEvents(eventListData);
+    // console.log("events ====>>>>>>> ", events);
+  }, []);
+
   const handleEditClick = (eventId) => {
     console.log("edit clicked", eventId);
 

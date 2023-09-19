@@ -12,6 +12,7 @@ import useAppStore from "../data/AppStore";
 
 const EventEntryForm = () => {
   const [NewEventStore, setNewEventStore] = useState({
+    id: Math.ceil(Math.random() * 1000000),
     eventName: "",
     date: new Date(),
     place: "",
@@ -70,6 +71,7 @@ const EventEntryForm = () => {
       setNewEventStore(tempStore);
     } else {
       setNewEventStore({
+        id: Math.ceil(Math.random() * 1000000),
         eventName: "",
         date: new Date(),
         place: "",
@@ -78,7 +80,7 @@ const EventEntryForm = () => {
         hostName: "",
         phoneNumber: "",
         bhojanCount: 0,
-        totalExpense: 0,
+        totalExpense: "0",
         receivedAmount: 0,
       });
     }
@@ -93,8 +95,8 @@ const EventEntryForm = () => {
       let newEvent = structuredClone(NewEventStore);
       newEvent.menuItems = newEvent.menuItems.map((item) => item.value);
       newEvent.date = newEvent.date.toISOString();
-      newEvent.bhojanCount = parseFloat(newEvent.bhojanCount);
-      newEvent.receivedAmount = parseFloat(newEvent.receivedAmount);
+      newEvent.bhojanCount = newEvent.bhojanCount;
+      newEvent.receivedAmount = newEvent.receivedAmount;
       if (!!newEvent.id) {
         console.log("current event ==>> ", newEvent);
 

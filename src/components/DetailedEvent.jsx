@@ -19,7 +19,7 @@ const DetailedEvent = () => {
     menuItems: [],
     host: "",
     phone: "",
-    count: "",
+    bhojanCount: "",
     totalExpense: "",
     receivedAmount: "",
   });
@@ -44,6 +44,8 @@ const DetailedEvent = () => {
     })
   );
 
+  const eventListData = useAppStore((state) => state.eventListData);
+
   const Vegetables = useAppStore((state) => state.Vegetables);
 
   const Grocery = useAppStore((state) => state.Grocery);
@@ -59,7 +61,8 @@ const DetailedEvent = () => {
   const currentEventDetails = useAppStore((state) =>
     state.eventDetailsData.find((eve) => eve.eventId === stateProp.id)
   );
-
+  const updateEvent = useAppStore((state) => state.updateEvent);
+  const getEventListData = useAppStore((state) => state.getEventListData);
   const deleteDetailsRow = useAppStore(
     (state) => state.deleteEventDetailRecord
   );
@@ -106,7 +109,24 @@ const DetailedEvent = () => {
     );
   };
 
-  //console.log("currentEventDetails => ", currentEventDetails);
+  const calculateAllExpenses = () => {
+    const totalExpense =
+      calculateTotalVegPrice() +
+      calculateTotalGroceryPrice() +
+      calculateTotalBeveragesPrice() +
+      calculateTotalDairyItemsPrice() +
+      calculateTotalDisposableItemsPrice() +
+      calculateOtherExpensesPrice();
+    // let newEvent = structuredClone(NewEventStore);
+    // newEvent.menuItems = newEvent.menuItems.map((item) => item.value);
+    // newEvent.date = newEvent.date.toISOString();
+    // newEvent.bhojanCount = newEvent.bhojanCount;
+    // newEvent.receivedAmount = newEvent.receivedAmount;
+    // newEvent.totalExpense = totalExpense;
+    // console.log("updating current event ==>> ", newEvent);
+    // updateEvent(newEvent);
+    return totalExpense;
+  };
 
   const schema = yup.object().shape({
     name: yup.string().required("Name is required."),
@@ -119,24 +139,10 @@ const DetailedEvent = () => {
   });
 
   useEffect(() => {
+    const eventList = getEventListData();
+
     if (!!stateProp) {
-      let tempStore = {
-        id: stateProp.id,
-        name: stateProp.eventName,
-        date: parseISO(stateProp.date),
-        place: stateProp.place,
-        menuItems: stateProp.menuItems.map((item) => ({
-          value: item,
-          label: item,
-        })),
-        host: stateProp.hostName,
-        phone: stateProp.phoneNumber,
-        count: stateProp.bhojanCount,
-        totalExpense: stateProp.totalExpense,
-        receivedAmount: stateProp.receivedAmount,
-      };
-      setNewEventStore(tempStore);
-      console.log("render count => ", currentEventDetails);
+      // console.log("currentEventDetails => ", currentEventDetails);
       if (currentEventDetails?.vegetableExpenses) {
         let tempVegRowsData = currentEventDetails.vegetableExpenses.map(
           (record) => ({
@@ -221,6 +227,30 @@ const DetailedEvent = () => {
 
         setOtherExpensesRowsData([...tempOtherExpensesRowsData]);
       }
+
+      let tempEventData = eventListData.find((eve) => eve.id === stateProp.id);
+
+      // console.log("tempEventData ====>>>>>>> ", tempEventData);
+
+      let tempStore = {
+        id: tempEventData.id,
+        name: tempEventData.eventName,
+        date: parseISO(tempEventData.date),
+        place: tempEventData.place,
+        menuItems: tempEventData.menuItems.map((item) => ({
+          value: item,
+          label: item,
+        })),
+        host: tempEventData.hostName,
+        phone: tempEventData.phoneNumber,
+        bhojanCount: tempEventData.bhojanCount,
+        totalExpense: tempEventData.totalExpense,
+        receivedAmount: tempEventData.receivedAmount,
+      };
+      setNewEventStore(tempStore);
+      // console.log("event stateProp => ", stateProp);
+
+      // console.log("event main data => ", tempStore);
     } else {
       setNewEventStore({
         name: "",
@@ -229,7 +259,7 @@ const DetailedEvent = () => {
         menuItems: [],
         host: "",
         phone: "",
-        count: "",
+        bhojanCount: "",
         totalExpense: "",
         receivedAmount: "",
       });
@@ -244,6 +274,7 @@ const DetailedEvent = () => {
       itemId,
       placeholder,
     });
+    getEventListData();
   };
 
   return (
@@ -254,8 +285,11 @@ const DetailedEvent = () => {
         <div className="col-span-8">
           <div className="collapse collapse-arrow bg-base-200">
             <input type="checkbox" className="peer" />
-            <div className="collapse-title text-xl font-medium peer-checked:bg-red-50">
+            <div className="collapse-title text-xl font-medium flex justify-between  peer-checked:bg-red-50">
               Main Details
+              <div className="badge badge-lg badge-secondary">
+                {calculateAllExpenses()}
+              </div>
             </div>
             <div className="collapse-content peer-checked:bg-red-50">
               <div className="grid gap-6 mb-6 md:grid-cols-2">
@@ -402,17 +436,19 @@ const DetailedEvent = () => {
                       className="input input-bordered w-full max-w-xs"
                       id="count"
                       type="text"
-                      value={NewEventStore.count}
+                      value={NewEventStore.bhojanCount}
                       onChange={(e) =>
                         setNewEventStore({
                           ...NewEventStore,
-                          count: e.target.value,
+                          bhojanCount: e.target.value,
                         })
                       }
                     />
                   </div>
-                  {errors.count && (
-                    <span className="text-sm text-red-600">{errors.count}</span>
+                  {errors.bhojanCount && (
+                    <span className="text-sm text-red-600">
+                      {errors.bhojanCount}
+                    </span>
                   )}
                 </div>
                 <div>
@@ -729,7 +765,11 @@ const DetailedEvent = () => {
                     optionsArray={OtherExpenses}
                     placeholder="Other Expenses"
                     eventId={NewEventStore.id}
-                    specialFields={{ quantityDisabled: true, unit: "NA" }}
+                    specialFields={{
+                      quantityDisabled: false,
+                      unit: "NA",
+                      quantity: "1",
+                    }}
                   />
                 </div>
                 {otherExpensesRowsData.length > 0 && (
@@ -752,7 +792,7 @@ const DetailedEvent = () => {
                             <TableRow
                               rowsData={otherExpensesRowsData}
                               deleteTableRows={deleteTableRows}
-                              placeholder="Disposable Items"
+                              placeholder="Other Expenses"
                             />
                           </tbody>
                         </table>
