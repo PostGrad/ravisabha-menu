@@ -304,6 +304,7 @@ const DetailedEvent = () => {
                       id="name"
                       type="text"
                       value={NewEventStore.name}
+                      disabled
                       onChange={(e) =>
                         setNewEventStore({
                           ...NewEventStore,
@@ -328,6 +329,7 @@ const DetailedEvent = () => {
                       dateFormat="dd-MM-yyyy"
                       placeholderText="Select Date 🗓️"
                       selected={NewEventStore.date}
+                      disabled
                       onChange={(value) =>
                         setNewEventStore({ ...NewEventStore, date: value })
                       }
@@ -352,6 +354,7 @@ const DetailedEvent = () => {
                     id="place"
                     type="text"
                     value={NewEventStore.place}
+                    disabled
                     onChange={(e) =>
                       setNewEventStore({
                         ...NewEventStore,
@@ -373,6 +376,7 @@ const DetailedEvent = () => {
                     placeholder="Add menu items..."
                     isMulti
                     value={NewEventStore.menuItems}
+                    isDisabled
                     onChange={(value) =>
                       setNewEventStore({ ...NewEventStore, menuItems: value })
                     }
@@ -396,6 +400,7 @@ const DetailedEvent = () => {
                     id="host"
                     type="text"
                     value={NewEventStore.host}
+                    disabled
                     onChange={(e) =>
                       setNewEventStore({
                         ...NewEventStore,
@@ -417,6 +422,7 @@ const DetailedEvent = () => {
                       id="phone"
                       type="text"
                       value={NewEventStore.phone}
+                      disabled
                       onChange={(e) =>
                         setNewEventStore({
                           ...NewEventStore,
@@ -437,6 +443,7 @@ const DetailedEvent = () => {
                       id="count"
                       type="text"
                       value={NewEventStore.bhojanCount}
+                      disabled
                       onChange={(e) =>
                         setNewEventStore({
                           ...NewEventStore,
@@ -488,6 +495,7 @@ const DetailedEvent = () => {
                       id="receivedAmount"
                       type="text"
                       value={NewEventStore.receivedAmount}
+                      disabled
                       onChange={(e) =>
                         setNewEventStore({
                           ...NewEventStore,
