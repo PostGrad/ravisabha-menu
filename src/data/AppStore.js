@@ -37,25 +37,25 @@ const calculateEventTotalExpense = function (
     tempTotalExpense.push(tempExpenses);
   }
 
-  if (tempEventDetailsData?.groceryExpenses.length > 0) {
+  if (tempEventDetailsData?.groceryExpenses?.length > 0) {
     let tempExpenses = calculateTotal(tempEventDetailsData?.groceryExpenses);
     // console.log("tempGroceryExpenses ==>> ", tempExpenses);
     tempTotalExpense.push(tempExpenses);
   }
 
-  if (tempEventDetailsData?.beveragesExpenses.length > 0) {
+  if (tempEventDetailsData?.beveragesExpenses?.length > 0) {
     let tempExpenses = calculateTotal(tempEventDetailsData?.beveragesExpenses);
     // console.log("tempBeveragesExpenses ==>> ", tempExpenses);
     tempTotalExpense.push(tempExpenses);
   }
 
-  if (tempEventDetailsData?.dairyItemsExpenses.length > 0) {
+  if (tempEventDetailsData?.dairyItemsExpenses?.length > 0) {
     let tempExpenses = calculateTotal(tempEventDetailsData?.dairyItemsExpenses);
     // console.log("tempDairyItemsExpenses ==>> ", tempExpenses);
     tempTotalExpense.push(tempExpenses);
   }
 
-  if (tempEventDetailsData?.disposableItemsExpenses.length > 0) {
+  if (tempEventDetailsData?.disposableItemsExpenses?.length > 0) {
     let tempExpenses = calculateTotal(
       tempEventDetailsData?.disposableItemsExpenses
     );
@@ -63,7 +63,7 @@ const calculateEventTotalExpense = function (
     tempTotalExpense.push(tempExpenses);
   }
 
-  if (tempEventDetailsData?.otherExpenses.length > 0) {
+  if (tempEventDetailsData?.otherExpenses?.length > 0) {
     let tempExpenses = calculateTotal(tempEventDetailsData?.otherExpenses);
     // console.log("tempotherExpenses ==>> ", tempExpenses);
     tempTotalExpense.push(tempExpenses);

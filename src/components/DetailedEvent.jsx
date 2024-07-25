@@ -61,7 +61,6 @@ const DetailedEvent = () => {
   const currentEventDetails = useAppStore((state) =>
     state.eventDetailsData.find((eve) => eve.eventId === stateProp.id)
   );
-  const updateEvent = useAppStore((state) => state.updateEvent);
   const getEventListData = useAppStore((state) => state.getEventListData);
   const deleteDetailsRow = useAppStore(
     (state) => state.deleteEventDetailRecord
@@ -117,14 +116,6 @@ const DetailedEvent = () => {
       calculateTotalDairyItemsPrice() +
       calculateTotalDisposableItemsPrice() +
       calculateOtherExpensesPrice();
-    // let newEvent = structuredClone(NewEventStore);
-    // newEvent.menuItems = newEvent.menuItems.map((item) => item.value);
-    // newEvent.date = newEvent.date.toISOString();
-    // newEvent.bhojanCount = newEvent.bhojanCount;
-    // newEvent.receivedAmount = newEvent.receivedAmount;
-    // newEvent.totalExpense = totalExpense;
-    // console.log("updating current event ==>> ", newEvent);
-    // updateEvent(newEvent);
     return totalExpense;
   };
 
@@ -812,6 +803,9 @@ const DetailedEvent = () => {
               </div>
             </div>
           </form>
+          <div className="flex justify-end py-5">
+            <button className="btn btn-accent">Add</button>
+          </div>
         </div>
       </div>
       {/* <p>{JSON.stringify(NewEventStore)}</p> */}

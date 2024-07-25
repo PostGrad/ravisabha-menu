@@ -396,7 +396,7 @@ const EventEntryForm = () => {
           </form>
         </div>
       </div>
-      <p>{JSON.stringify(NewEventStore)}</p>
+      {/* <p>{JSON.stringify(NewEventStore)}</p> */}
     </div>
   );
 };
