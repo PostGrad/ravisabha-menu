@@ -13,6 +13,41 @@ import {
 import { Units } from "./Units";
 import { Roles, Users } from "./userData";
 
+const getDataFromApi = async (url) => {
+  const response = await fetch(url);
+  const data = await response.json();
+  return data;
+};
+
+const getEventListFromApi = async () => {
+  const eventList = await getDataFromApi("/api/eventList");
+  return eventList;
+};
+
+const getMenuItemsFromApi = async () => {
+  const menuItems = await getDataFromApi("/api/menuItems");
+  return menuItems;
+};
+
+const getIngrediantsFromApi = async () => {
+  const ingrediants = await getDataFromApi("/api/ingrediants");
+  return ingrediants;
+};
+
+const getUnitsFromApi = async () => {
+  const units = await getDataFromApi("/api/units");
+  return units;
+};
+
+const getRolesFromApi = async () => {
+  const roles = await getDataFromApi("/api/roles");
+  return roles;
+};
+
+const getUsersFromApi = async () => {
+  const users = await getDataFromApi("/api/users");
+  return users;
+};
 const calculateTotal = (itemArray) => {
   return itemArray.reduce((total, item) => {
     // console.log("total and curent price ==>> ", total, item.price);
